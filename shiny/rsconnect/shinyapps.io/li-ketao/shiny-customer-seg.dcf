@@ -1,0 +1,12 @@
+name: shiny-customer-seg
+title: shiny-customer-seg
+username:
+account: li-ketao
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1867912
+bundleId: 2832095
+url: https://li-ketao.shinyapps.io/shiny-customer-seg/
+when: 1582742002.26404
+asMultiple: FALSE
+asStatic: FALSE

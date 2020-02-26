@@ -1,0 +1,320 @@
+---
+title: Customer Segmentation. Application of Unsupervised Learning Methods for Trend Exploration
+author:
+  - name: Ketao Li
+    affiliation: York University
+    email:  liketao@yahoo.com
+  - name: Kush Halani
+    affiliation: York University
+    email:  kush.halani@ontariotechu.net
+  - name: Josue Romain
+    affiliation: York University
+    email:  josue.rolland.romain@gmail.com    
+  - name: Juan Peña
+    affiliation: York University
+    email:  jppena62@my.yorku.ca
+ 
+abstract: >
+  Customer segmentation is the process of dividing customers into groups based on common characteristics so companies can market to each group effectively and appropriately. 
+
+output:
+  rticles::rjournal_article:
+    includes:
+      in_header: preamble.tex
+   
+---
+
+```{r echo=FALSE, message=FALSE, warnings=FALSE}
+# Clean all variables that might be left by other script to avoid collusion
+rm(list=ls(all=TRUE))
+# load required libraries
+library(ggplot2) # plotting lib
+library(gridExtra) # arrange grids
+library(dplyr)  # data manipuation
+library(RColorBrewer) # color palettes
+library(tm) # text mining
+library(dbscan) # density-based clustering
+library(wordcloud) # plots fequent terms
+library(factoextra) # deals with cluster plotting. Provides cluster related utility methods 
+library(cluster) # for gower similarity and pam
+library(plot3D) # 3D plots
+library(summarytools)
+library(purrr)
+source('utils.R') # supplementary code
+
+# set summarytools global parameters
+st_options(plain.ascii = F,       # This is very handy in all Rmd documents
+      style = "rmarkdown",        # This too
+      footnote = NA,             # Avoids footnotes which would clutter the result
+      subtitle.emphasis = F,  # This is a setting to experiment with - according to
+      dfSummary.graph.col = F
+)  
+
+# pick a palette
+mainPalette = ggplotColours()
+```
+
+```{r global_options, include=FALSE}
+# make the images flow nicely
+knitr::opts_chunk$set(fig.pos = 'H', echo = T,comment = NA, prompt = F, 
+                      cache = F, warning = F, message = F,  fig.align="center")
+```
+
+
+## Background
+
+Without a deep understanding of how a company’s best current customers are segmented, a business often lacks the market focus needed to allocate and spend its precious human and capital resources efficiently. Furthermore, a lack of best current customer segment focus can cause diffused go-to-market and product development strategies that hamper a company’s ability to fully engage with its target segments. Together, all of those factors can ultimately impede a company’s growth.  
+RFM (recency, frequency, monetary) analysis is a marketing technique used to determine quantitatively which customers are the best ones by examining how recently a customer has purchased (recency), how often they purchase (frequency), and how much the customer spends (monetary).
+
+## Objective
+
+The objective of customers segment according to their purchase history, is to turn them into loyal customers by recommending products of their choice.
+
+
+# Data Analysis
+
+Typically e-commerce datasets are proprietary and consequently hard to find among publicly available data. However, The UCI Machine Learning Repository has made this dataset containing actual transactions from 2010 and 2011.The data set used for this research contains 540k of transaction from UK retailer. The data has been sourced from [Kaggle](https://www.kaggle.com/carrie1/ecommerce-data). 
+
+
+## Data Dictionary
+
+
+Column Name                 | Column Description  
+----------------------------| ------------------- 
+InvoiceNo                   | Invoice No
+StockCode                   | Stock Code
+Description                 | Description for the stock
+Quantity                    | Quantity of products sold
+InvoiceDate                 | Invoice Date
+UnitPrice                   | Unit Price
+CustomerID                  | Customer ID
+Country                     | Country where the products are sold
+
+
+## Data Exploration
+
+Firstly we are going to load and examine content and statistics of the data set
+
+```{r}
+data = read.csv("../data/data.csv", header = T, 
+                na.strings = c("NA","","#NA"),sep=",")
+```
+
+```{r dataset_summary1, echo=FALSE, results="asis"}
+print(dfSummary(data, valid.col = F, max.distinct.values = 3, heading = F),
+      caption = "\\label{tab:dataset_summary1} Online Retail Dataset Summary", scalebbox = .9)
+```
+
+From the above summary, we can find that there are some negative values for Quantity and UnitPrice.These values don't make sense, so we'll delete them directly. There are some missing data for CustomerID, we just remove them directly considering we have enough data.
+
+```{r}
+customerData <- data %>% 
+  mutate(Quantity = replace(Quantity, Quantity<=0, NA),
+         UnitPrice = replace(UnitPrice, UnitPrice<=0, NA))
+
+
+customerData = customerData %>%filter(complete.cases(.)) 
+```
+
+```{r dataset_summary2, echo=FALSE, results="asis"}
+print(dfSummary(customerData, valid.col = F, max.distinct.values = 3, heading = F),
+      caption = "\\label{tab:dataset_summary2} Online Retail Dataset Summary", scalebbox = .9)
+```
+
+## Data Preparation
+We need do some some data transformation and add one new variant total.
+```{r}
+customerData <- customerData %>% 
+  mutate( InvoiceDate=as.Date(InvoiceDate, '%m/%d/%Y %H:%M'), 
+          CustomerID=as.factor(CustomerID),
+          Country = as.character(Country))
+
+customerData <- customerData %>% 
+  mutate(total = Quantity*UnitPrice)
+
+glimpse(customerData)
+
+```
+
+## Calculate RFM
+To implement the RFM analysis, we need to take steps to get the rfm values:
+
+1. Find the most recent date for each customer ID and calculate the days to the 2012-01-01, to get the recency data.
+2. Calculate the quantity of transactions of a customer, to get the frequency data
+3. Sum the amount of money a customer spent and divide it by frequency, to get the amount per transaction on average, that is the monetary data.
+
+```{r results='hold'}
+
+cd_RFM <- customerData %>% 
+  group_by(CustomerID) %>% 
+  summarise(recency=as.numeric(as.Date("2012-01-01")-max(InvoiceDate)),
+            frequenci=n_distinct(InvoiceNo), monitery= sum(total)/n_distinct(InvoiceNo),
+            country = max(Country)
+      
+            ) 
+
+summary(cd_RFM)
+
+head(cd_RFM)
+```
+```{r dataset_summary, echo=FALSE, results="asis"}
+print(dfSummary(cd_RFM, valid.col = F, max.distinct.values = 3, heading = F),
+      caption = "\\label{tab:dataset_summary} Online Retail Dataset Summary", scalebbox = .9)
+```
+
+
+```{r results='hold'}
+# histogram with added parameters
+hist(cd_RFM$recency,
+main="recency of customer",
+xlab="recency",
+xlim=c(20,400),
+col="darkmagenta",
+freq=FALSE
+)
+```
+
+```{r results='hold'}
+# histogram with added parameters
+hist(cd_RFM$frequenci,
+main="frequenci of customer",
+xlab="frequenci",
+breaks=100,
+xlim=c(0,50),
+col="darkmagenta",
+freq=FALSE
+)
+```
+
+
+```{r results='hold'}
+# histogram with added parameters
+hist(cd_RFM$monitery,
+main="monitery of customer",
+xlab="monitery",
+breaks=100,
+xlim=c(0,10000),
+col="darkmagenta",
+freq=FALSE
+)
+```
+
+Because the data is realy skewed, we use log scale to normalize
+```{r}
+cd_RFM$monitery <- log(cd_RFM$monitery)
+hist(cd_RFM$monitery,
+main="monitery of customer",
+xlab="monitery",
+breaks=100,
+col="darkmagenta",
+freq=FALSE
+)
+```
+
+
+```{r results='hold'}
+cd_RFM1 = cd_RFM%>% 
+dplyr::select(-CustomerID,-country)
+
+summary(cd_RFM1)
+```
+
+```{r results='hold'}
+cd_RFM2 <- cd_RFM1 %>% 
+mutate(recency = scale(recency),
+       frequenci = scale(frequenci),
+       monitery = scale(monitery)
+  
+)
+
+summary(cd_RFM2)
+```
+
+```{r results='hold'}
+set.seed(123)
+
+# function to compute total within-cluster sum of square 
+wss <- function(k) {
+  kmeans(cd_RFM2, k, nstart = 10 )$tot.withinss
+}
+
+# Compute and plot wss for k = 1 to k = 15
+k.values <- 1:15
+
+# extract wss for 2-15 clusters
+wss_values <- map_dbl(k.values, wss)
+
+plot(k.values, wss_values,
+       type="b", pch = 19, frame = FALSE, 
+       xlab="Number of clusters K",
+       ylab="Total within-clusters sum of squares")
+
+```
+
+
+```{r results='hold'}
+set.seed(123)
+
+fviz_nbclust(cd_RFM2, kmeans, method = "wss")
+
+```
+
+```{r results='hold'}
+set.seed(123)
+fviz_nbclust(cd_RFM2, kmeans, method = "silhouette")
+```
+
+```{r results='hold'}
+set.seed(123)
+gap_stat <- clusGap(cd_RFM2, FUN = kmeans, nstart = 25,
+                    K.max = 10, B = 50)
+# Print the result
+print(gap_stat, method = "firstmax")
+fviz_gap_stat(gap_stat)
+
+```
+
+```{r results='hold'}
+k2 <- kmeans(cd_RFM2, centers = 4, nstart = 25)
+
+fviz_cluster(k2, data = cd_RFM2)
+```
+
+group 1:
+Champions	
+Bought recently, buy often and spend the most!	
+Reward them. 
+Can be early adopters for new products. Will promote your brand.
+
+group 2:
+Recent Customers	
+Bought most recently, but not often.	
+Provide on-boarding support, give them early success, start building relationship.
+
+group 3:
+Hibernating	
+Last purchase was long back, low spenders and low number of orders.	Offer other relevant products and special discounts. 
+Recreate brand value.
+
+group 4:
+Promising	
+Recent shoppers, but haven’t spent much.	
+Create brand awareness, offer free trials
+
+```{r results='hold'}
+group <- k2$cluster
+cd_RFM3 <- cbind(cd_RFM, group)
+#write.csv(cd_RFM3, "../data/mydata1.csv")
+
+```
+
+
+
+
+
+\bibliography{RJreferences}
+
+
+# Note from the Authors
+
+This file was generated using [_The R Journal_ style article template](https://github.com/rstudio/rticles), additional information on how to prepare articles for submission is here - [Instructions for Authors](https://journal.r-project.org/share/author-guide.pdf). The article itself is an executable R Markdown file that could be [downloaded from Github](https://github.com/ivbsoftware/big-data-final-2/blob/master/docs/R_Journal/big-data-final-2/) with all the necessary artifacts.
