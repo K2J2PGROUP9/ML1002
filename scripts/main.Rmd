@@ -40,7 +40,12 @@ library(cluster) # for gower similarity and pam
 library(plot3D) # 3D plots
 library(summarytools)
 library(purrr)
+library(wordcloud2)
+library(rworldmap)
+library(lubridate)
+library(VIM)
 source('utils.R') # supplementary code
+
 
 # set summarytools global parameters
 st_options(plain.ascii = F,       # This is very handy in all Rmd documents
@@ -81,14 +86,14 @@ Typically e-commerce datasets are proprietary and consequently hard to find amon
 
 Column Name                 | Column Description  
 ----------------------------| ------------------- 
-InvoiceNo                   | Invoice No
-StockCode                   | Stock Code
-Description                 | Description for the stock
-Quantity                    | Quantity of products sold
+InvoiceNo                   | Unique ID to identify each Invoice
+StockCode                   | Unique ID for each item in stock
+Description                 | A short description for each item
+Quantity                    | Number of items bought
 InvoiceDate                 | Invoice Date
-UnitPrice                   | Unit Price
-CustomerID                  | Customer ID
-Country                     | Country where the products are sold
+UnitPrice                   | The price of each item
+CustomerID                  | Unique ID for each custumer
+Country                     | The country were the custumer lives
 
 
 ## Data Exploration
@@ -105,7 +110,7 @@ print(dfSummary(data, valid.col = F, max.distinct.values = 3, heading = F),
       caption = "\\label{tab:dataset_summary1} Online Retail Dataset Summary", scalebbox = .9)
 ```
 
-From the above summary, we can find that there are some negative values for Quantity and UnitPrice.These values don't make sense, so we'll delete them directly. There are some missing data for CustomerID, we just remove them directly considering we have enough data.
+From the above summary, we can find that there are some negative values for Quantity and UnitPrice.These values don't make sense, so we'll delete them directly.
 
 ```{r}
 customerData <- data %>% 
@@ -115,6 +120,18 @@ customerData <- data %>%
 
 customerData = customerData %>%filter(complete.cases(.)) 
 ```
+##Missing data
+```{r plot_notes2,  echo=FALSE, fig.align="center", fig.cap="Missing data"}
+
+a = aggr(data)
+plot(a)
+
+```
+
+```{r}
+summary(a)
+```
+There are some missing data for CustomerID and Desciption, we just remove them directly considering we have enough data.
 
 ```{r dataset_summary2, echo=FALSE, results="asis"}
 print(dfSummary(customerData, valid.col = F, max.distinct.values = 3, heading = F),
@@ -135,6 +152,156 @@ customerData <- customerData %>%
 glimpse(customerData)
 
 ```
+
+```{r results='hold'}
+# histogram with added parameters
+hist(data$Quantity,
+main="Quantity of purchase",
+xlab="Quantity",
+breaks=100000,
+xlim=c(0,100),
+col="darkmagenta",
+freq=FALSE
+)
+```
+
+```{r results='hold'}
+# histogram with added parameters
+hist(data$UnitPrice,
+main="UnitPrice of purchase",
+xlab="UnitPrice",
+breaks=100000,
+xlim=c(0,100),
+col="darkmagenta",
+freq=FALSE
+)
+```
+
+
+```{r results='hold'}
+# histogram with added parameters
+hist(customerData$total,
+main="total",
+xlab="total",
+breaks=100000,
+xlim=c(0,500),
+col="darkmagenta",
+freq=FALSE
+)
+```
+
+#### Descriptive Features.
+
+*Description* is free-text features that might provide additional insights about the customer shopping. We are going to take a close look at this feature and decide if we could utilize it.
+
+Lets' begin with the *Description*
+```{r plot_notes,  echo=FALSE, fig.align="center", fig.cap="Most Common Words in Description"}
+description = data %>%  mutate(text = trimws(Description)) %>% filter(!is.na(text)) %>% select(text)
+pCorups = VCorpus(VectorSource(description))
+pCorups  = tm_map(pCorups , removeNumbers)
+pCorups  = tm_map(pCorups , removePunctuation)
+pTermMatrix = tm::TermDocumentMatrix(pCorups)
+tmp = as.matrix(pTermMatrix)
+tmp = sort(rowSums(tmp),decreasing=T)
+tmp = data.frame(word = names(tmp),freq=tmp)
+set.seed(5673)
+wordcloud(words = tmp$word, freq = tmp$freq, min.freq = 10,max.words=160, random.order=F,
+          rot.per=0.35, colors=mainPalette)
+
+#set.seed(5673)
+#wordcloud2(data = tmp, size = 2)
+```
+From the word cloud, we can get some highly frequently used words such as set,red,box,lunch,blue,box,paper,glass.
+
+Unfortunately *Description* feature does not provide more knowledge to what the others features already supply. Thus it will be dropped.
+
+Country gives information about the country were the customer lives.
+
+```{r}
+length(unique(data$Country))
+```
+The custumers are from 38 different countries. Lets visualize this.
+
+
+```{r plot_notes3,  echo=FALSE, fig.align="center", fig.cap="customer country distribution"}
+#library(rworldmap)
+countries <- as.data.frame(table(data$Country))
+colnames(countries) <- c("country", "value")
+
+
+matched <- joinCountryData2Map(countries, joinCode="NAME", nameJoinColumn="country")
+
+mapCountryData(matched, nameColumnToPlot="value", mapTitle="Customer Country Distribution", catMethod = "pretty", colourPalette = "heat")
+
+
+```
+
+```{r plot_notes1,  echo=FALSE, fig.align="center", fig.cap="Countries Description"}
+data %>%
+  group_by(Country) %>%                              # calculate the counts
+  summarize(counts = n()) %>%
+  arrange(counts) %>%                                # sort by counts
+  mutate(Country = factor(Country, Country)) %>%     # reset factor
+  ggplot(aes(x=Country, y=counts)) +                 # plot 
+    geom_bar(stat="identity") +                      # plot histogram
+    coord_flip()                                     # flip the coordinates
+
+```
+```{r }
+
+data1 <- data
+data1$InvoiceDate <- mdy_hm(data$InvoiceDate) 
+
+
+head(data1)
+
+```
+We now have the data transformed into datetime data. From the variable InvoiceDate we can extract the year, month, day and time.
+
+
+```{r}
+data1$InvoiceYear <- year(data1$InvoiceDate)
+data1$InvoiceMonth <- month(data1$InvoiceDate)
+data1$InvoiceWeekday <- wday(data1$InvoiceDate)
+data1$InvoiceHour <- hour(data1$InvoiceDate)
+
+```
+
+Here we have the number of transactions per month for 2011.
+```{r }
+timedata <- data1 %>% 
+  filter(InvoiceYear==2011) %>% 
+  count(InvoiceMonth)  #count the number of invoices per month for 2011
+
+ggplot(timedata, aes(InvoiceMonth, n)) +  #plot the number of invoices per day               
+  geom_col(fill = "purple") +
+  labs(x="Month", y="Number of invoices")
+```
+
+It seems that the number of transactions is rising from September and the highest in November. In december the lowest number of transactions is performed.
+
+Lets explore which days are the most busy ones
+```{r }
+timedata <- data1 %>% 
+  filter(InvoiceYear==2011) %>% 
+  count(InvoiceWeekday)
+
+ggplot(timedata, aes(InvoiceWeekday, n)) +  #plot the number of invoices per day               
+    geom_col(fill = "purple") +
+  labs(x="Week", y="Number of invoices") 
+```
+
+Most transactions are placed on monday, tuesday, wednesday and thursday.
+```{r }
+timedata <- data1 %>% 
+ filter(InvoiceYear==2011) %>% 
+  count(InvoiceHour)
+
+ggplot(timedata, aes(InvoiceHour, n)) +  #plot the number of invoices per day               
+    geom_col(fill = "purple") +
+  labs(x="hour", y="Number of invoices") 
+```
+
 
 ## Calculate RFM
 To implement the RFM analysis, we need to take steps to get the rfm values:
@@ -276,7 +443,7 @@ fviz_gap_stat(gap_stat)
 
 ```{r results='hold'}
 k2 <- kmeans(cd_RFM2, centers = 4, nstart = 25)
-
+k2
 fviz_cluster(k2, data = cd_RFM2)
 ```
 
@@ -304,7 +471,7 @@ Create brand awareness, offer free trials
 ```{r results='hold'}
 group <- k2$cluster
 cd_RFM3 <- cbind(cd_RFM, group)
-#write.csv(cd_RFM3, "../data/mydata1.csv")
+#write.csv(cd_RFM3, "../shiny/www/mydata1.csv")
 
 ```
 

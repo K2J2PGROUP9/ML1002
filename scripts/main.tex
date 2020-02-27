@@ -51,14 +51,14 @@ transaction from UK retailer. The data has been sourced from
 Column Name & Column Description\tabularnewline
 \midrule
 \endhead
-InvoiceNo & Invoice No\tabularnewline
-StockCode & Stock Code\tabularnewline
-Description & Description for the stock\tabularnewline
-Quantity & Quantity of products sold\tabularnewline
+InvoiceNo & Unique ID to identify each Invoice\tabularnewline
+StockCode & Unique ID for each item in stock\tabularnewline
+Description & A short description for each item\tabularnewline
+Quantity & Number of items bought\tabularnewline
 InvoiceDate & Invoice Date\tabularnewline
-UnitPrice & Unit Price\tabularnewline
-CustomerID & Customer ID\tabularnewline
-Country & Country where the products are sold\tabularnewline
+UnitPrice & The price of each item\tabularnewline
+CustomerID & Unique ID for each custumer\tabularnewline
+Country & The country were the custumer lives\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -254,8 +254,7 @@ Country\\
 
 From the above summary, we can find that there are some negative values
 for Quantity and UnitPrice.These values don't make sense, so we'll
-delete them directly. There are some missing data for CustomerID, we
-just remove them directly considering we have enough data.
+delete them directly.
 
 \begin{Schunk}
 \begin{Sinput}
@@ -267,6 +266,47 @@ customerData <- data %>%
 customerData = customerData %>%filter(complete.cases(.)) 
 \end{Sinput}
 \end{Schunk}
+
+\#\#Missing data
+
+\begin{Schunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{main_files/figure-latex/plot_notes2-1} 
+
+}
+
+\caption[Missing data]{Missing data}\label{fig:plot_notes2}
+\end{figure}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+summary(a)
+\end{Sinput}
+\begin{Soutput}
+
+ Missings per variable: 
+    Variable  Count
+   InvoiceNo      0
+   StockCode      0
+ Description   1454
+    Quantity      0
+ InvoiceDate      0
+   UnitPrice      0
+  CustomerID 135080
+     Country      0
+
+ Missings in combinations of variables: 
+    Combinations  Count    Percent
+ 0:0:0:0:0:0:0:0 406829 75.0733057
+ 0:0:0:0:0:0:1:0 133626 24.6583836
+ 0:0:1:0:0:0:1:0   1454  0.2683107
+\end{Soutput}
+\end{Schunk}
+
+There are some missing data for CustomerID and Desciption, we just
+remove them directly considering we have enough data.
 
 \begin{longtable}[]{@{}lllll@{}}
 \caption{\label{tab:dataset_summary2} Online Retail Dataset
@@ -454,7 +494,8 @@ We need do some some data transformation and add one new variant total.
 \begin{Sinput}
 customerData <- customerData %>% 
   mutate( InvoiceDate=as.Date(InvoiceDate, '%m/%d/%Y %H:%M'), 
-          CustomerID=as.factor(CustomerID))
+          CustomerID=as.factor(CustomerID),
+          Country = as.character(Country))
 
 customerData <- customerData %>% 
   mutate(total = Quantity*UnitPrice)
@@ -471,9 +512,171 @@ $ Quantity    <int> 6, 6, 8, 6, 6, 2, 6, 6, 6, 32, 6, 6, 8, 6, 6, 3, 2, 3, ...
 $ InvoiceDate <date> 2010-12-01, 2010-12-01, 2010-12-01, 2010-12-01, 2010-1...
 $ UnitPrice   <dbl> 2.55, 3.39, 2.75, 3.39, 3.39, 7.65, 4.25, 1.85, 1.85, 1...
 $ CustomerID  <fct> 17850, 17850, 17850, 17850, 17850, 17850, 17850, 17850,...
-$ Country     <fct> United Kingdom, United Kingdom, United Kingdom, United ...
+$ Country     <chr> "United Kingdom", "United Kingdom", "United Kingdom", "...
 $ total       <dbl> 15.30, 20.34, 22.00, 20.34, 20.34, 15.30, 25.50, 11.10,...
 \end{Soutput}
+\end{Schunk}
+
+\hypertarget{descriptive-features.}{%
+\paragraph{Descriptive Features.}\label{descriptive-features.}}
+
+\emph{Description} is free-text features that might provide additional
+insights about the customer shopping. We are going to take a close look
+at this feature and decide if we could utilize it.
+
+Lets' begin with the \emph{Description}
+
+\begin{Schunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{main_files/figure-latex/plot_notes-1} 
+
+}
+
+\caption[Most Common Words in Description]{Most Common Words in Description}\label{fig:plot_notes}
+\end{figure}
+\end{Schunk}
+
+From the word cloud, we can get some highly frequently used words such
+as set,red,box,lunch,blue,box,paper,glass.
+
+Unfortunately \emph{Description} feature does not provide more knowledge
+to what the others features already supply. Thus it will be dropped.
+
+Country gives information about the country were the customer lives.
+
+\begin{Schunk}
+\begin{Sinput}
+length(unique(data$Country))
+\end{Sinput}
+\begin{Soutput}
+[1] 38
+\end{Soutput}
+\end{Schunk}
+
+The custumers are from 38 different countries. Lets visualize this.
+
+\begin{Schunk}
+\begin{Soutput}
+33 codes from your data successfully matched countries in the map
+5 codes from your data failed to match with a country code in the map
+210 codes from the map weren't represented in your data
+\end{Soutput}
+\begin{figure}[H]
+
+{\centering \includegraphics{main_files/figure-latex/plot_notes3-1} 
+
+}
+
+\caption[customer country distribution]{customer country distribution}\label{fig:plot_notes3}
+\end{figure}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{main_files/figure-latex/plot_notes1-1} 
+
+}
+
+\caption[Countries Description]{Countries Description}\label{fig:plot_notes1}
+\end{figure}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+data1 <- data
+data1$InvoiceDate <- mdy_hm(data$InvoiceDate) 
+
+
+head(data1)
+\end{Sinput}
+\begin{Soutput}
+  InvoiceNo StockCode                         Description Quantity
+1    536365    85123A  WHITE HANGING HEART T-LIGHT HOLDER        6
+2    536365     71053                 WHITE METAL LANTERN        6
+3    536365    84406B      CREAM CUPID HEARTS COAT HANGER        8
+4    536365    84029G KNITTED UNION FLAG HOT WATER BOTTLE        6
+5    536365    84029E      RED WOOLLY HOTTIE WHITE HEART.        6
+6    536365     22752        SET 7 BABUSHKA NESTING BOXES        2
+          InvoiceDate UnitPrice CustomerID        Country
+1 2010-12-01 08:26:00      2.55      17850 United Kingdom
+2 2010-12-01 08:26:00      3.39      17850 United Kingdom
+3 2010-12-01 08:26:00      2.75      17850 United Kingdom
+4 2010-12-01 08:26:00      3.39      17850 United Kingdom
+5 2010-12-01 08:26:00      3.39      17850 United Kingdom
+6 2010-12-01 08:26:00      7.65      17850 United Kingdom
+\end{Soutput}
+\end{Schunk}
+
+We now have the data transformed into datetime data. From the variable
+InvoiceDate we can extract the year, month, day and time.
+
+\begin{Schunk}
+\begin{Sinput}
+data1$InvoiceYear <- year(data1$InvoiceDate)
+data1$InvoiceMonth <- month(data1$InvoiceDate)
+data1$InvoiceWeekday <- wday(data1$InvoiceDate)
+data1$InvoiceHour <- hour(data1$InvoiceDate)
+\end{Sinput}
+\end{Schunk}
+
+Here we have the number of transactions per month for 2011.
+
+\begin{Schunk}
+\begin{Sinput}
+timedata <- data1 %>% 
+  filter(InvoiceYear==2011) %>% 
+  count(InvoiceMonth)  #count the number of invoices per month for 2011
+
+ggplot(timedata, aes(InvoiceMonth, n)) +  #plot the number of invoices per day               
+  geom_col(fill = "purple") +
+  labs(x="Month", y="Number of invoices")
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-9-1} \end{center}
+
+\end{Schunk}
+
+It seems that the number of transactions is rising from September and
+the highest in November. In december the lowest number of transactions
+is performed.
+
+Lets explore which days are the most busy ones
+
+\begin{Schunk}
+\begin{Sinput}
+timedata <- data1 %>% 
+  filter(InvoiceYear==2011) %>% 
+  count(InvoiceWeekday)
+
+ggplot(timedata, aes(InvoiceWeekday, n)) +  #plot the number of invoices per day               
+    geom_col(fill = "purple") +
+  labs(x="Week", y="Number of invoices") 
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-10-1} \end{center}
+
+\end{Schunk}
+
+Most transactions are placed on monday, tuesday, wednesday and thursday.
+
+\begin{Schunk}
+\begin{Sinput}
+timedata <- data1 %>% 
+ filter(InvoiceYear==2011) %>% 
+  count(InvoiceHour)
+
+ggplot(timedata, aes(InvoiceHour, n)) +  #plot the number of invoices per day               
+    geom_col(fill = "purple") +
+  labs(x="hour", y="Number of invoices") 
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-11-1} \end{center}
+
 \end{Schunk}
 
 \hypertarget{calculate-rfm}{%
@@ -502,7 +705,10 @@ values:
 cd_RFM <- customerData %>% 
   group_by(CustomerID) %>% 
   summarise(recency=as.numeric(as.Date("2012-01-01")-max(InvoiceDate)),
-            frequenci=n_distinct(InvoiceNo), monitery= sum(total)/n_distinct(InvoiceNo)) 
+            frequenci=n_distinct(InvoiceNo), monitery= sum(total)/n_distinct(InvoiceNo),
+            country = max(Country)
+      
+            ) 
 
 summary(cd_RFM)
 
@@ -517,15 +723,23 @@ head(cd_RFM)
  12350  :   1   3rd Qu.:164.8   3rd Qu.:  5.000   3rd Qu.:  430.11  
  12352  :   1   Max.   :396.0   Max.   :209.000   Max.   :84236.25  
  (Other):4332                                                       
-# A tibble: 6 x 4
-  CustomerID recency frequenci monitery
-  <fct>        <dbl>     <int>    <dbl>
-1 12346          348         1   77184.
-2 12347           25         7     616.
-3 12348           98         4     449.
-4 12349           41         1    1758.
-5 12350          333         1     334.
-6 12352           59         8     313.
+   country         
+ Length:4338       
+ Class :character  
+ Mode  :character  
+                   
+                   
+                   
+                   
+# A tibble: 6 x 5
+  CustomerID recency frequenci monitery country       
+  <fct>        <dbl>     <int>    <dbl> <chr>         
+1 12346          348         1   77184. United Kingdom
+2 12347           25         7     616. Iceland       
+3 12348           98         4     449. Finland       
+4 12349           41         1    1758. Italy         
+5 12350          333         1     334. Norway        
+6 12352           59         8     313. Norway        
 \end{Soutput}
 \end{Schunk}
 
@@ -627,6 +841,25 @@ IQR (CV) : 251.5 (4.3)\strut
 0\\
 (0\%)\strut
 \end{minipage}\tabularnewline
+\begin{minipage}[t]{0.05\columnwidth}\raggedright
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+country\\
+{[}character{]}\strut
+\end{minipage} & \begin{minipage}[t]{0.31\columnwidth}\raggedright
+1. United Kingdom\\
+2. Germany\\
+3. France\\
+{[} 34 others {]}\strut
+\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\raggedright
+3920 (90.4\%)\\
+94 ( 2.2\%)\\
+87 ( 2.0\%)\\
+237 ( 5.5\%)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+0\\
+(0\%)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -643,7 +876,7 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-6-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-13-1} \end{center}
 
 \end{Schunk}
 
@@ -661,7 +894,7 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-7-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-14-1} \end{center}
 
 \end{Schunk}
 
@@ -679,11 +912,11 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-8-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-15-1} \end{center}
 
 \end{Schunk}
 
-Becouse the data is realy skewed, we use log scale to normalize
+Because the data is realy skewed, we use log scale to normalize
 
 \begin{Schunk}
 \begin{Sinput}
@@ -698,14 +931,14 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-9-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-16-1} \end{center}
 
 \end{Schunk}
 
 \begin{Schunk}
 \begin{Sinput}
 cd_RFM1 = cd_RFM%>% 
-dplyr::select(-CustomerID)
+dplyr::select(-CustomerID,-country)
 
 summary(cd_RFM1)
 \end{Sinput}
@@ -764,7 +997,7 @@ plot(k.values, wss_values,
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-12-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
 \end{Schunk}
 
@@ -776,7 +1009,7 @@ fviz_nbclust(cd_RFM2, kmeans, method = "wss")
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-13-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-20-1} \end{center}
 
 \end{Schunk}
 
@@ -787,7 +1020,7 @@ fviz_nbclust(cd_RFM2, kmeans, method = "silhouette")
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-14-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 \end{Schunk}
 
@@ -802,7 +1035,7 @@ fviz_gap_stat(gap_stat)
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-15-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 \begin{Soutput}
 Clustering Gap statistic ["clusGap"] from call:
@@ -826,13 +1059,152 @@ B=50 simulated reference sets, k = 1..10; spaceH0="scaledPCA"
 \begin{Schunk}
 \begin{Sinput}
 k2 <- kmeans(cd_RFM2, centers = 4, nstart = 25)
-
+k2
 fviz_cluster(k2, data = cd_RFM2)
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-16-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
+\begin{Soutput}
+K-means clustering with 4 clusters of sizes 22, 1840, 972, 1504
+
+Cluster means:
+     recency   frequenci   monitery
+1 -0.8695790  9.50669672  1.2750038
+2 -0.4715478  0.13311570  0.7398225
+3  1.6396157 -0.35448242 -0.3008688
+4 -0.4700318 -0.07282135 -0.7293078
+
+Clustering vector:
+   [1] 2 2 2 2 3 2 3 3 3 2 2 2 2 2 3 2 4 2 3 4 2 2 2 3 2 4 3 2 2 2 2 3 4 3 2 2 2
+  [38] 2 2 4 2 2 4 3 3 2 2 2 2 2 2 3 2 4 3 2 2 2 2 4 4 4 2 2 3 4 2 2 4 2 2 2 2 2
+  [75] 2 2 2 3 4 2 4 2 3 2 2 4 2 4 2 2 2 2 2 2 2 2 2 4 2 3 2 2 2 2 2 2 2 2 2 2 2
+ [112] 2 2 2 3 2 2 4 3 4 2 4 2 3 2 4 3 2 4 3 2 4 2 3 3 2 2 2 2 2 2 4 4 2 2 4 2 2
+ [149] 4 2 2 2 2 2 2 2 2 2 2 2 3 4 2 3 4 2 2 2 4 3 2 3 2 3 3 2 2 4 4 2 3 3 4 4 2
+ [186] 2 3 4 3 2 4 3 4 4 4 2 2 3 4 4 2 2 2 2 4 4 3 4 2 4 2 2 2 2 2 2 3 2 2 2 4 2
+ [223] 2 2 3 3 2 2 2 2 4 2 2 2 2 2 2 3 2 4 2 2 2 2 2 2 3 4 2 3 3 2 4 2 2 2 4 4 2
+ [260] 2 3 2 2 2 2 3 2 2 4 2 4 4 2 2 2 2 2 3 2 2 3 4 4 2 4 2 2 2 4 4 2 2 3 2 2 2
+ [297] 2 2 2 2 2 2 4 2 2 2 4 4 4 3 2 2 4 2 2 3 3 3 3 3 3 2 2 4 2 2 1 2 4 2 2 3 3
+ [334] 4 2 2 2 2 4 3 2 3 2 2 4 4 2 2 2 2 4 3 4 4 3 3 3 3 2 2 3 2 3 4 3 3 4 4 2 4
+ [371] 3 3 4 3 2 2 2 4 4 4 3 2 3 4 2 3 2 3 2 2 2 4 2 4 4 3 2 2 4 3 2 2 3 2 3 2 4
+ [408] 2 3 2 3 4 3 3 4 2 4 3 4 3 2 4 2 2 2 3 2 3 4 4 3 2 3 4 2 3 2 2 2 2 4 2 2 4
+ [445] 4 2 3 4 4 2 2 3 4 2 4 2 4 2 4 2 2 4 2 3 4 2 2 2 4 2 2 2 3 2 4 4 2 4 3 4 4
+ [482] 1 3 3 4 2 4 3 4 2 4 3 2 4 4 4 2 4 2 3 4 2 3 4 2 3 4 3 3 4 2 2 2 4 4 2 2 2
+ [519] 4 2 2 2 2 2 3 2 2 2 2 2 3 3 2 2 2 2 2 2 3 2 4 3 3 4 3 4 3 4 4 4 4 3 3 2 4
+ [556] 2 4 4 2 2 4 3 1 2 2 4 3 4 4 2 2 4 3 2 4 4 4 2 3 2 4 2 2 2 4 4 3 3 2 2 4 4
+ [593] 4 2 3 3 2 2 2 2 4 2 4 2 2 3 4 4 4 2 2 3 2 4 2 2 2 4 3 2 2 3 4 2 2 4 4 4 2
+ [630] 2 4 2 4 2 4 3 2 3 4 4 2 4 4 2 2 2 4 4 4 4 2 2 2 4 2 3 4 4 4 3 3 2 2 3 3 2
+ [667] 3 4 4 2 2 2 4 3 4 4 3 4 2 2 4 4 4 2 4 4 4 2 3 3 2 2 2 2 2 2 3 4 4 4 2 4 2
+ [704] 4 4 2 4 3 2 3 4 3 3 4 2 2 3 3 4 4 3 4 4 2 2 2 2 2 4 2 2 4 2 2 4 4 4 2 2 2
+ [741] 3 2 2 2 2 2 2 2 2 3 3 2 3 2 4 4 2 2 2 2 2 2 3 3 2 2 2 4 2 4 3 3 3 2 2 2 2
+ [778] 4 2 3 2 3 2 4 2 3 2 3 2 2 3 2 4 4 4 1 4 4 2 2 2 2 4 4 2 2 2 2 4 4 4 2 2 4
+ [815] 2 4 2 3 4 2 2 4 2 2 3 3 2 2 2 4 2 3 2 3 2 4 4 2 4 3 3 2 4 3 2 3 4 3 3 2 4
+ [852] 2 4 4 2 3 3 2 2 3 4 2 3 4 4 4 2 3 2 3 4 2 3 4 4 4 2 2 2 4 2 2 4 2 4 2 2 4
+ [889] 3 4 3 2 2 4 4 4 4 2 4 3 2 2 4 4 4 3 2 2 2 4 2 3 4 3 4 2 4 4 2 2 4 3 2 3 2
+ [926] 2 4 2 2 4 2 2 2 4 2 3 2 2 4 4 2 4 2 2 3 4 3 4 4 3 2 2 2 2 2 2 2 4 4 4 2 3
+ [963] 4 2 4 2 3 2 4 2 2 2 3 4 2 3 2 3 4 3 2 4 2 3 4 3 3 2 4 3 3 2 3 2 4 2 1 4 4
+[1000] 3 4 3 4 4 3 3 3 2 4 3 3 3 3 4 3 4 4 2 2 3 4 2 4 4 2 3 2 2 2 3 4 3 4 2 4 2
+[1037] 3 3 4 2 3 4 3 4 4 2 2 2 4 2 3 2 2 2 2 2 2 2 2 4 4 3 4 4 3 4 2 2 4 1 2 3 2
+[1074] 2 3 2 2 4 3 2 3 2 3 4 2 2 2 4 4 3 4 2 2 2 3 4 4 2 4 3 4 3 4 3 2 2 2 4 2 2
+[1111] 2 2 2 2 3 4 3 4 2 3 4 4 2 2 2 2 2 4 3 2 4 4 2 4 2 4 2 4 3 4 3 2 2 4 4 3 4
+[1148] 2 2 3 4 3 2 4 2 2 2 4 2 4 3 2 2 4 4 2 4 3 4 2 3 2 3 3 3 4 4 4 2 4 4 3 2 4
+[1185] 3 2 2 4 4 4 4 4 4 3 4 2 2 4 3 2 2 3 4 2 4 2 4 4 2 2 2 2 3 4 4 2 2 4 2 3 2
+[1222] 4 2 2 2 3 3 4 2 2 2 2 2 3 3 4 4 4 4 2 2 2 4 2 3 3 2 4 2 3 4 2 3 4 3 2 2 2
+[1259] 4 4 4 2 2 2 3 2 2 4 3 4 3 4 4 2 4 4 4 2 4 3 3 4 2 4 2 4 3 2 2 2 4 2 4 2 4
+[1296] 4 3 2 2 4 2 4 2 2 3 4 4 2 2 2 4 4 2 4 3 2 4 2 2 2 2 4 3 4 2 2 4 3 3 2 2 3
+[1333] 3 1 4 2 2 3 3 2 2 3 4 2 4 4 2 3 4 4 2 4 2 3 2 2 2 2 2 3 2 4 3 4 4 4 3 4 2
+[1370] 2 4 2 4 2 2 4 4 4 3 2 2 2 4 2 2 2 3 2 2 4 2 4 3 3 4 2 3 3 4 3 2 3 3 2 2 3
+[1407] 2 2 4 2 2 3 4 2 3 3 4 4 2 2 3 2 2 2 2 4 3 4 2 2 2 4 4 2 1 2 4 2 3 2 2 2 4
+[1444] 3 4 4 2 2 3 2 2 3 3 2 4 4 2 2 4 2 3 3 3 2 4 4 4 2 3 4 3 4 3 3 4 3 2 4 2 2
+[1481] 4 2 2 3 3 3 3 3 4 4 2 2 4 3 2 2 2 2 3 2 4 4 2 2 2 4 4 2 2 2 4 3 2 3 4 2 4
+[1518] 2 4 2 2 2 3 2 2 4 4 3 2 4 4 3 3 3 2 2 3 2 4 4 4 4 3 2 4 3 2 3 2 4 2 4 4 3
+[1555] 2 4 4 4 4 2 2 3 2 3 4 3 2 3 2 4 4 2 3 3 2 4 4 3 3 2 4 4 3 4 2 4 2 2 4 4 4
+[1592] 3 4 2 2 4 4 4 4 4 4 2 1 2 4 2 3 2 2 2 3 2 4 4 2 4 3 4 2 2 2 3 3 2 4 4 4 2
+[1629] 4 2 4 2 2 2 2 2 4 3 2 3 3 4 4 4 4 4 3 4 3 4 3 2 4 4 4 2 2 4 3 4 3 1 2 2 4
+[1666] 3 4 3 3 2 3 4 4 3 2 2 2 2 3 3 2 2 2 2 4 4 3 2 3 1 3 2 2 4 2 2 3 4 4 2 4 4
+[1703] 4 2 2 4 2 3 3 3 2 2 2 2 4 4 4 2 2 3 4 2 4 3 2 3 4 3 2 2 4 2 4 3 2 2 4 2 2
+[1740] 4 4 4 4 2 4 4 4 2 3 3 4 4 2 2 4 2 4 2 3 4 4 4 3 2 2 2 2 2 2 2 2 2 3 4 3 4
+[1777] 4 2 4 2 3 4 2 4 2 3 4 3 4 4 2 4 4 4 4 4 3 2 4 4 2 4 3 2 4 4 2 4 3 2 3 3 4
+[1814] 4 4 3 3 4 4 2 4 4 2 4 2 3 2 2 2 3 2 3 4 2 4 2 2 2 2 2 4 4 2 4 4 2 3 2 2 3
+[1851] 4 3 2 4 4 4 2 4 2 3 2 3 3 3 3 2 2 2 3 2 4 4 2 2 2 3 2 4 4 1 2 2 4 2 2 3 2
+[1888] 2 3 4 2 4 3 2 3 2 2 2 4 4 4 2 2 2 4 2 3 4 4 4 2 3 2 3 2 4 2 4 2 2 4 2 4 4
+[1925] 4 2 3 4 3 4 3 4 4 3 2 2 2 2 2 3 2 2 4 4 3 4 4 3 4 4 2 4 2 4 4 4 4 4 3 4 2
+[1962] 4 4 4 1 3 3 2 2 2 2 3 4 3 2 2 3 4 4 3 4 4 4 1 4 3 2 2 2 4 2 3 2 2 2 2 2 2
+[1999] 3 4 3 3 2 2 3 2 3 2 2 4 4 2 2 3 4 2 3 2 2 3 2 3 4 2 2 2 2 2 2 4 3 2 4 2 2
+[2036] 4 2 2 2 2 3 4 2 4 3 2 3 2 2 3 2 2 2 3 2 2 2 2 2 4 2 2 2 2 3 4 4 3 3 4 3 2
+[2073] 3 4 3 2 3 4 3 4 2 4 2 2 2 2 2 2 2 4 2 4 2 3 2 4 4 3 2 3 3 4 4 4 2 3 2 3 3
+[2110] 3 3 3 3 4 2 3 2 3 3 3 2 2 2 2 4 2 2 2 3 2 2 2 2 4 2 2 4 3 3 4 4 3 4 2 2 3
+[2147] 2 2 2 4 2 2 2 4 4 3 3 4 4 4 2 2 2 2 3 2 4 2 2 2 2 3 4 2 4 3 1 4 4 3 4 3 2
+[2184] 3 4 2 2 4 3 4 2 2 3 2 4 4 4 2 2 2 4 2 3 3 4 3 3 2 3 4 2 2 2 3 3 2 2 2 2 2
+[2221] 2 2 4 4 2 2 2 3 2 3 2 3 3 3 2 4 2 3 4 3 2 4 4 3 3 4 4 3 2 2 3 4 3 2 2 4 4
+[2258] 3 4 3 2 2 4 4 4 3 4 4 2 3 4 4 3 2 2 3 3 3 2 2 4 4 3 3 3 4 3 4 4 3 2 2 4 4
+[2295] 4 2 2 4 2 2 2 2 4 2 2 4 2 2 2 2 2 2 2 4 2 3 4 2 2 3 3 3 4 4 2 2 4 3 4 2 2
+[2332] 4 2 2 4 4 2 3 2 2 2 2 4 3 3 2 4 4 3 2 4 2 2 4 2 3 2 3 2 4 2 4 3 2 4 4 4 4
+[2369] 2 4 2 2 3 2 4 3 4 2 4 4 3 4 3 2 4 2 4 2 4 2 2 4 4 4 4 2 3 4 3 4 4 4 2 4 2
+[2406] 2 2 2 3 4 2 2 2 2 2 4 2 4 2 2 2 3 3 2 4 3 3 4 2 2 2 3 4 4 3 2 4 3 4 2 2 2
+[2443] 3 4 3 2 2 2 4 2 2 2 4 2 2 4 2 4 4 3 4 2 3 2 2 3 2 3 2 3 4 4 2 3 4 4 4 3 3
+[2480] 2 2 2 2 3 3 2 2 3 2 3 3 2 4 2 2 4 4 4 4 4 2 4 2 2 2 3 4 2 4 2 4 3 4 2 2 2
+[2517] 4 2 2 4 3 4 3 3 4 2 4 2 2 2 3 4 2 2 2 2 2 2 2 2 2 2 2 2 4 2 3 4 2 2 2 3 2
+[2554] 2 2 3 4 2 3 2 2 4 2 2 4 3 2 4 4 2 2 2 4 2 3 4 2 4 4 3 4 4 4 2 4 2 4 2 4 4
+[2591] 2 2 4 2 3 2 4 2 4 3 3 3 4 4 4 4 3 3 3 4 3 4 3 2 4 2 4 4 2 3 4 3 4 3 3 2 4
+[2628] 3 3 3 3 2 2 2 3 4 4 2 3 2 3 3 2 2 4 2 2 4 4 2 2 4 4 4 4 4 3 2 3 2 2 3 2 2
+[2665] 2 2 2 2 2 4 4 4 2 4 2 2 4 2 2 2 4 3 2 4 4 3 4 2 1 4 4 4 4 4 2 4 3 4 4 2 4
+[2702] 4 1 3 4 2 3 2 3 4 2 2 4 4 2 3 2 3 2 2 2 3 2 2 4 2 3 3 2 2 2 3 3 4 3 2 4 2
+[2739] 2 3 4 4 4 4 4 4 3 3 2 4 2 2 4 2 3 4 2 2 3 2 4 3 3 4 3 3 4 2 2 4 2 3 3 2 2
+[2776] 2 2 2 2 3 4 4 2 2 3 2 3 2 3 2 3 4 2 3 2 2 4 3 2 2 3 3 4 4 2 2 4 4 4 2 4 2
+[2813] 4 4 2 2 2 2 4 4 2 2 4 4 4 2 3 2 2 2 3 4 2 4 4 2 2 2 2 2 2 4 3 4 3 3 2 4 3
+[2850] 2 4 3 3 2 3 4 4 4 2 4 2 4 2 4 3 2 3 4 2 3 2 2 3 4 2 2 4 2 4 2 3 2 2 3 3 2
+[2887] 2 2 2 3 2 2 3 2 4 2 3 4 4 2 2 3 2 2 2 4 3 2 2 2 3 2 4 4 3 4 4 4 2 4 4 2 4
+[2924] 3 3 2 2 4 4 4 2 2 4 3 4 3 4 2 4 3 4 2 4 2 4 4 4 2 4 2 2 4 2 2 4 4 2 3 3 2
+[2961] 2 2 4 4 4 3 2 3 4 2 2 2 4 2 2 3 3 2 3 4 4 2 4 4 4 4 4 2 4 4 1 2 3 3 4 3 4
+[2998] 2 3 4 4 4 4 2 4 4 4 4 2 4 3 3 3 4 4 4 2 3 4 4 3 4 2 2 4 4 4 4 3 4 4 4 2 4
+[3035] 4 2 4 3 3 2 4 2 2 3 4 2 2 4 3 4 2 2 2 4 3 3 2 4 2 4 3 4 4 3 2 2 3 4 4 3 4
+[3072] 2 2 2 2 2 4 3 3 2 2 2 3 2 4 4 2 4 2 2 4 2 3 4 3 4 2 2 2 2 2 3 2 3 2 3 3 4
+[3109] 4 2 4 4 2 4 4 3 4 4 2 4 4 2 3 3 2 2 3 4 3 2 3 4 4 3 2 3 2 2 2 4 2 3 2 4 2
+[3146] 4 2 3 3 3 4 2 2 2 4 2 2 4 3 4 2 3 4 4 4 2 2 2 2 4 2 2 3 4 2 4 2 4 2 2 4 4
+[3183] 3 4 4 3 3 2 2 2 4 2 2 4 2 2 2 3 2 3 2 3 4 4 3 2 2 3 4 3 4 2 4 2 4 2 2 3 3
+[3220] 2 2 4 2 2 2 2 4 2 3 4 3 2 3 3 2 4 2 2 3 4 3 3 2 4 3 4 2 4 4 4 2 4 4 2 4 3
+[3257] 4 4 2 4 4 4 3 4 4 3 2 2 2 2 4 3 4 2 4 4 3 4 3 4 2 4 4 2 2 3 4 2 2 4 3 2 3
+[3294] 4 3 4 4 2 3 2 2 2 2 4 4 4 3 3 4 4 4 4 3 2 4 4 4 4 2 4 2 2 4 4 4 2 4 3 4 4
+[3331] 4 3 4 4 3 4 3 4 4 2 2 2 4 2 4 4 2 4 4 3 4 4 4 3 4 4 4 2 4 3 4 4 4 4 4 4 4
+[3368] 2 4 2 2 4 3 4 3 4 4 2 2 4 4 4 3 2 3 4 4 4 3 3 2 3 4 4 2 3 2 2 3 2 2 2 2 2
+[3405] 4 4 4 3 2 4 3 4 4 2 2 2 4 4 4 4 4 2 2 2 2 4 4 4 3 4 2 4 4 2 4 3 2 4 2 2 4
+[3442] 2 2 4 2 2 2 2 2 3 2 2 4 2 2 3 2 3 4 4 4 2 2 2 2 4 4 4 4 4 4 2 2 2 2 2 2 2
+[3479] 2 2 3 2 4 4 2 2 3 3 2 4 3 4 4 4 3 3 2 3 4 3 3 4 4 3 2 2 4 4 3 2 3 3 2 4 2
+[3516] 4 3 4 2 4 4 2 2 2 4 4 2 3 4 2 3 2 2 3 2 3 3 4 4 2 4 3 2 4 4 2 4 3 2 4 2 2
+[3553] 3 2 4 2 3 2 4 3 4 4 4 4 2 3 3 4 4 4 3 2 4 4 3 4 4 4 4 3 2 2 2 3 4 2 4 3 4
+[3590] 4 4 4 4 3 4 3 4 4 4 4 2 4 3 3 4 2 4 4 4 4 2 4 3 4 4 4 4 4 4 4 3 2 4 2 4 2
+[3627] 2 4 2 2 2 4 4 3 4 4 4 2 3 2 2 4 2 3 3 4 4 4 4 4 3 2 4 2 2 3 4 3 4 4 4 3 2
+[3664] 2 3 4 4 4 4 4 3 3 4 4 2 2 4 4 4 4 2 2 2 2 3 3 3 2 2 4 2 4 4 2 2 3 4 3 4 4
+[3701] 4 2 2 2 4 2 4 2 2 2 2 4 2 4 4 3 4 2 2 4 3 4 2 3 2 4 4 2 1 4 4 3 3 3 2 2 2
+[3738] 4 4 2 2 3 2 4 2 4 3 4 2 2 4 3 4 2 2 3 4 3 4 3 2 3 4 4 3 2 2 3 3 2 2 2 2 2
+[3775] 4 4 4 3 2 2 4 4 4 3 3 2 4 2 4 3 4 3 3 2 4 4 3 4 3 4 3 3 4 2 2 4 3 4 4 4 4
+[3812] 4 2 2 3 2 4 4 3 4 3 4 3 2 3 2 4 2 2 2 2 2 2 4 2 2 4 3 2 2 3 4 4 2 2 2 2 4
+[3849] 3 2 3 4 2 2 2 2 4 4 3 4 2 4 4 4 3 2 2 3 2 3 4 2 2 4 2 2 2 3 2 2 2 4 4 4 2
+[3886] 2 2 4 2 3 2 2 4 4 2 4 2 3 2 4 2 4 2 2 2 3 4 4 3 2 2 3 3 2 3 2 4 3 4 2 3 3
+[3923] 3 4 2 3 3 2 3 2 2 2 2 2 2 2 2 2 2 3 2 4 2 4 4 2 2 4 2 3 4 3 4 3 2 4 2 4 4
+[3960] 2 3 2 4 4 2 2 3 4 4 2 3 4 4 4 4 4 4 2 2 3 4 4 2 3 4 4 2 4 2 2 2 2 2 4 2 4
+[3997] 4 2 2 2 2 3 4 4 4 4 4 4 2 2 1 3 4 2 4 3 3 4 3 3 2 2 2 3 3 4 3 2 4 2 2 4 4
+[4034] 4 3 2 3 3 2 3 3 3 4 4 4 2 4 4 3 3 3 4 3 4 4 4 3 4 3 3 4 4 4 3 3 2 3 4 2 4
+[4071] 2 2 4 3 2 3 4 4 4 2 4 2 2 4 2 2 4 2 2 4 3 4 2 1 4 2 4 3 3 4 2 4 4 4 4 4 4
+[4108] 3 3 3 3 3 2 4 2 3 4 3 4 3 4 2 4 3 4 3 3 4 3 4 4 4 3 4 2 4 3 3 3 4 4 4 2 4
+[4145] 4 4 2 3 4 4 3 4 4 4 4 4 4 4 4 4 4 4 3 3 2 2 3 4 4 4 3 2 4 2 2 3 2 3 3 2 3
+[4182] 4 4 3 2 2 4 2 4 3 3 2 4 2 2 2 3 2 2 4 4 1 2 4 3 3 2 4 4 3 3 4 2 2 3 3 3 2
+[4219] 2 4 4 4 3 2 3 4 4 3 2 2 2 4 2 4 4 4 4 2 4 4 2 4 3 2 2 2 3 2 3 4 2 4 2 2 4
+[4256] 3 4 2 2 2 2 3 4 3 2 2 3 3 2 3 2 2 2 4 3 3 2 4 4 2 4 3 3 2 2 2 3 4 3 4 2 2
+[4293] 3 2 2 3 2 2 2 3 4 3 2 4 4 3 2 4 2 2 2 2 4 3 2 4 4 2 2 2 4 4 2 2 4 3 4 2 4
+[4330] 4 2 4 4 3 3 4 4 2
+
+Within cluster sum of squares by cluster:
+[1]  803.7674 2239.1390 1288.0246 1227.1171
+ (between_SS / total_SS =  57.3 %)
+
+Available components:
+
+[1] "cluster"      "centers"      "totss"        "withinss"     "tot.withinss"
+[6] "betweenss"    "size"         "iter"         "ifault"      
+\end{Soutput}
 \end{Schunk}
 
 group 1: Champions\\
@@ -855,7 +1227,9 @@ Create brand awareness, offer free trials
 
 \begin{Schunk}
 \begin{Sinput}
-cd_RFM3 <- cbind(cd_RFM, k2$cluster)
+group <- k2$cluster
+cd_RFM3 <- cbind(cd_RFM, group)
+#write.csv(cd_RFM3, "../data/mydata1.csv")
 \end{Sinput}
 \end{Schunk}
 
