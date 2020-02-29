@@ -33,6 +33,57 @@ The objective of customers segment according to their purchase history,
 is to turn them into loyal customers by recommending products of their
 choice.
 
+\hypertarget{apply-the-ethical-ml-framework}{%
+\section{Apply the Ethical ML
+framework}\label{apply-the-ethical-ml-framework}}
+
+1 Data risk awareness
+
+We commit to develop and improve reasonable processes and infrastructure
+to ensure data and model security are being taken into consideration
+during the development of machine learning systems. We commit to prepare
+for security risks through explicit efforts, such as educating relevant
+personnel, establishing processes around data, and assess implications
+of ML backdoor.
+
+2 Trust by privacy
+
+We commit to build and communicate processes that protect and handle
+data with stakeholders that may interact with the system directly and/or
+indirectly. One key way to establish trust with users and relevant
+stakeholders is by showing the right process and technologies are in
+place to protect personal data. We should make explicit effort to
+understand the potential implications of metadata involved, and whether
+the metadata can expose unexpected personal information from relevant
+users or stakeholders. Fortuantely in our dataset there are not
+sensitive data.There is no explicit personal information.The only
+feature related to personal information is CustomerID.We should not put
+any file related to the detailed person to the server.
+
+3 Displacement strategy
+
+We commit to identify and document relevant information so that business
+change processes can be developed to mitigate the impact towards workers
+being automated. When planning the rollout of a new technology to
+automate a process, there are a number of people who's role or at least
+responsibilities will be automated. If this is not taken into
+consideration, these people will not have a transition plan and it won't
+be possible to fully benefit from the time and resources gained from the
+automation.
+
+We should make sure they are able to raise the relevant concerns when
+business change or operational transformation plans are being set up, as
+this would make a significant positive impact in the rollout of the
+technology.
+
+4 Bias evaluation
+
+As developer it is important to obtain an understanding of how potential
+biases might arise. Once the different sub-categories for bias are
+identified it's possible to evaluate the results on a breakdown based on
+precision, recall and accuracy for each of the potential inference
+groups. We checked through our system, there is no bias in our system.
+
 \hypertarget{data-analysis}{%
 \section{Data Analysis}\label{data-analysis}}
 
@@ -485,9 +536,6 @@ Country\\
 \bottomrule
 \end{longtable}
 
-\hypertarget{data-preparation}{%
-\subsection{Data Preparation}\label{data-preparation}}
-
 We need do some some data transformation and add one new variant total.
 
 \begin{Schunk}
@@ -515,6 +563,60 @@ $ CustomerID  <fct> 17850, 17850, 17850, 17850, 17850, 17850, 17850, 17850,...
 $ Country     <chr> "United Kingdom", "United Kingdom", "United Kingdom", "...
 $ total       <dbl> 15.30, 20.34, 22.00, 20.34, 20.34, 15.30, 25.50, 11.10,...
 \end{Soutput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+# histogram with added parameters
+hist(data$Quantity,
+main="Quantity of purchase",
+xlab="Quantity",
+breaks=100000,
+xlim=c(0,100),
+col="darkmagenta",
+freq=FALSE
+)
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-6-1} \end{center}
+
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+# histogram with added parameters
+hist(data$UnitPrice,
+main="UnitPrice of purchase",
+xlab="UnitPrice",
+breaks=100000,
+xlim=c(0,100),
+col="darkmagenta",
+freq=FALSE
+)
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-7-1} \end{center}
+
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+# histogram with added parameters
+hist(customerData$total,
+main="total",
+xlab="total",
+breaks=100000,
+xlim=c(0,500),
+col="darkmagenta",
+freq=FALSE
+)
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-8-1} \end{center}
+
 \end{Schunk}
 
 \hypertarget{descriptive-features.}{%
@@ -635,7 +737,7 @@ ggplot(timedata, aes(InvoiceMonth, n)) +  #plot the number of invoices per day
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-9-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-12-1} \end{center}
 
 \end{Schunk}
 
@@ -657,7 +759,7 @@ ggplot(timedata, aes(InvoiceWeekday, n)) +  #plot the number of invoices per day
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-10-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-13-1} \end{center}
 
 \end{Schunk}
 
@@ -675,12 +777,15 @@ ggplot(timedata, aes(InvoiceHour, n)) +  #plot the number of invoices per day
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-11-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-14-1} \end{center}
 
 \end{Schunk}
 
+\hypertarget{data-preparation}{%
+\subsection{Data Preparation}\label{data-preparation}}
+
 \hypertarget{calculate-rfm}{%
-\subsection{Calculate RFM}\label{calculate-rfm}}
+\subsubsection{Calculate RFM}\label{calculate-rfm}}
 
 To implement the RFM analysis, we need to take steps to get the rfm
 values:
@@ -876,7 +981,7 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-13-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-16-1} \end{center}
 
 \end{Schunk}
 
@@ -894,7 +999,7 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-14-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-17-1} \end{center}
 
 \end{Schunk}
 
@@ -912,7 +1017,7 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-15-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-18-1} \end{center}
 
 \end{Schunk}
 
@@ -931,7 +1036,7 @@ freq=FALSE
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-16-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
 \end{Schunk}
 
@@ -975,229 +1080,209 @@ summary(cd_RFM2)
 \end{Soutput}
 \end{Schunk}
 
-\begin{Schunk}
-\begin{Sinput}
-set.seed(123)
+\hypertarget{modeling-and-evalutation}{%
+\section{Modeling and Evalutation}\label{modeling-and-evalutation}}
 
-# function to compute total within-cluster sum of square 
-wss <- function(k) {
-  kmeans(cd_RFM2, k, nstart = 10 )$tot.withinss
-}
+In this section we will apply various clustering methods to cluster the
+customer based rfm. We will use Partitioning clustering and Hierarchical
+clustering approaches.
 
-# Compute and plot wss for k = 1 to k = 15
-k.values <- 1:15
+Before we apply clustering models to the dataset we should assess
+clustering tendency. In order to do so we will employ \textbf{Hopkins}
+statistics.
 
-# extract wss for 2-15 clusters
-wss_values <- map_dbl(k.values, wss)
+\hypertarget{hopkins-statistics}{%
+\subsection{Hopkins Statistics}\label{hopkins-statistics}}
 
-plot(k.values, wss_values,
-       type="b", pch = 19, frame = FALSE, 
-       xlab="Number of clusters K",
-       ylab="Total within-clusters sum of squares")
-\end{Sinput}
+Hopkins statistic is used to assess the clustering tendency of a dataset
+by measuring the probability that a given dataset is generated by a
+uniform data distribution.(Ref: \cite{mining}). Let's calculate Hopkins
+(\textbf{H}) statistics for cd\_RFM2:
 
-
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-19-1} \end{center}
-
-\end{Schunk}
+The \textbf{H} value close to one indicates very good clustering
+tendency. The \textbf{H} value around or greater than 0.5 denotes poor
+clustering tendency(Ref: \cite{factoextra}).
 
 \begin{Schunk}
 \begin{Sinput}
-set.seed(123)
-
-fviz_nbclust(cd_RFM2, kmeans, method = "wss")
+H =  get_clust_tendency(cd_RFM2,n = 100, graph = F, seed = 6709)
+print(H[["hopkins_stat"]])
 \end{Sinput}
-
-
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-20-1} \end{center}
-
-\end{Schunk}
-
-\begin{Schunk}
-\begin{Sinput}
-set.seed(123)
-fviz_nbclust(cd_RFM2, kmeans, method = "silhouette")
-\end{Sinput}
-
-
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-21-1} \end{center}
-
-\end{Schunk}
-
-\begin{Schunk}
-\begin{Sinput}
-set.seed(123)
-gap_stat <- clusGap(cd_RFM2, FUN = kmeans, nstart = 25,
-                    K.max = 10, B = 50)
-# Print the result
-print(gap_stat, method = "firstmax")
-fviz_gap_stat(gap_stat)
-\end{Sinput}
-
-
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-22-1} \end{center}
-
 \begin{Soutput}
-Clustering Gap statistic ["clusGap"] from call:
-clusGap(x = cd_RFM2, FUNcluster = kmeans, K.max = 10, B = 50,     nstart = 25)
-B=50 simulated reference sets, k = 1..10; spaceH0="scaledPCA"
- --> Number of clusters (method 'firstmax'): 2
-          logW   E.logW      gap      SE.sim
- [1,] 7.665127 9.543614 1.878487 0.003841697
- [2,] 7.428966 9.358659 1.929692 0.003743205
- [3,] 7.385286 9.243754 1.858468 0.004020079
- [4,] 7.221823 9.138214 1.916391 0.003710861
- [5,] 7.142412 9.056076 1.913664 0.003289008
- [6,] 7.070778 8.971714 1.900935 0.003488891
- [7,] 6.992752 8.907722 1.914971 0.004083335
- [8,] 6.940304 8.846979 1.906675 0.004682498
- [9,] 6.896881 8.810133 1.913252 0.004272970
-[10,] 6.836043 8.775627 1.939584 0.004036459
+[1] 0.9816015
 \end{Soutput}
 \end{Schunk}
 
+Perfect! H value is very close to 1. The dataset is clustrable.
+
+\hypertarget{partitioning-clustering-approach}{%
+\subsection{Partitioning Clustering
+Approach}\label{partitioning-clustering-approach}}
+
+At first, we use Elbow method to get optimal number of clusters for
+k-means clustering:
+
 \begin{Schunk}
 \begin{Sinput}
+set.seed(123)
+# Elbow method
+fviz_nbclust(cd_RFM2, kmeans, method = "wss") +
+    geom_vline(xintercept = 4, linetype = 2)+
+  labs(subtitle = "Elbow method")
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-23-1} \end{center}
+
+\end{Schunk}
+
+It seems that the optimal number of clusters is 4.
+
+Let's use kmeans to cluster the dataset.
+
+\begin{Schunk}
+\begin{Sinput}
+set.seed(123)
 k2 <- kmeans(cd_RFM2, centers = 4, nstart = 25)
 k2
 fviz_cluster(k2, data = cd_RFM2)
 \end{Sinput}
 
 
-\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-24-1} \end{center}
 
 \begin{Soutput}
-K-means clustering with 4 clusters of sizes 22, 1840, 972, 1504
+K-means clustering with 4 clusters of sizes 22, 1504, 1840, 972
 
 Cluster means:
      recency   frequenci   monitery
 1 -0.8695790  9.50669672  1.2750038
-2 -0.4715478  0.13311570  0.7398225
-3  1.6396157 -0.35448242 -0.3008688
-4 -0.4700318 -0.07282135 -0.7293078
+2 -0.4700318 -0.07282135 -0.7293078
+3 -0.4715478  0.13311570  0.7398225
+4  1.6396157 -0.35448242 -0.3008688
 
 Clustering vector:
-   [1] 2 2 2 2 3 2 3 3 3 2 2 2 2 2 3 2 4 2 3 4 2 2 2 3 2 4 3 2 2 2 2 3 4 3 2 2 2
-  [38] 2 2 4 2 2 4 3 3 2 2 2 2 2 2 3 2 4 3 2 2 2 2 4 4 4 2 2 3 4 2 2 4 2 2 2 2 2
-  [75] 2 2 2 3 4 2 4 2 3 2 2 4 2 4 2 2 2 2 2 2 2 2 2 4 2 3 2 2 2 2 2 2 2 2 2 2 2
- [112] 2 2 2 3 2 2 4 3 4 2 4 2 3 2 4 3 2 4 3 2 4 2 3 3 2 2 2 2 2 2 4 4 2 2 4 2 2
- [149] 4 2 2 2 2 2 2 2 2 2 2 2 3 4 2 3 4 2 2 2 4 3 2 3 2 3 3 2 2 4 4 2 3 3 4 4 2
- [186] 2 3 4 3 2 4 3 4 4 4 2 2 3 4 4 2 2 2 2 4 4 3 4 2 4 2 2 2 2 2 2 3 2 2 2 4 2
- [223] 2 2 3 3 2 2 2 2 4 2 2 2 2 2 2 3 2 4 2 2 2 2 2 2 3 4 2 3 3 2 4 2 2 2 4 4 2
- [260] 2 3 2 2 2 2 3 2 2 4 2 4 4 2 2 2 2 2 3 2 2 3 4 4 2 4 2 2 2 4 4 2 2 3 2 2 2
- [297] 2 2 2 2 2 2 4 2 2 2 4 4 4 3 2 2 4 2 2 3 3 3 3 3 3 2 2 4 2 2 1 2 4 2 2 3 3
- [334] 4 2 2 2 2 4 3 2 3 2 2 4 4 2 2 2 2 4 3 4 4 3 3 3 3 2 2 3 2 3 4 3 3 4 4 2 4
- [371] 3 3 4 3 2 2 2 4 4 4 3 2 3 4 2 3 2 3 2 2 2 4 2 4 4 3 2 2 4 3 2 2 3 2 3 2 4
- [408] 2 3 2 3 4 3 3 4 2 4 3 4 3 2 4 2 2 2 3 2 3 4 4 3 2 3 4 2 3 2 2 2 2 4 2 2 4
- [445] 4 2 3 4 4 2 2 3 4 2 4 2 4 2 4 2 2 4 2 3 4 2 2 2 4 2 2 2 3 2 4 4 2 4 3 4 4
- [482] 1 3 3 4 2 4 3 4 2 4 3 2 4 4 4 2 4 2 3 4 2 3 4 2 3 4 3 3 4 2 2 2 4 4 2 2 2
- [519] 4 2 2 2 2 2 3 2 2 2 2 2 3 3 2 2 2 2 2 2 3 2 4 3 3 4 3 4 3 4 4 4 4 3 3 2 4
- [556] 2 4 4 2 2 4 3 1 2 2 4 3 4 4 2 2 4 3 2 4 4 4 2 3 2 4 2 2 2 4 4 3 3 2 2 4 4
- [593] 4 2 3 3 2 2 2 2 4 2 4 2 2 3 4 4 4 2 2 3 2 4 2 2 2 4 3 2 2 3 4 2 2 4 4 4 2
- [630] 2 4 2 4 2 4 3 2 3 4 4 2 4 4 2 2 2 4 4 4 4 2 2 2 4 2 3 4 4 4 3 3 2 2 3 3 2
- [667] 3 4 4 2 2 2 4 3 4 4 3 4 2 2 4 4 4 2 4 4 4 2 3 3 2 2 2 2 2 2 3 4 4 4 2 4 2
- [704] 4 4 2 4 3 2 3 4 3 3 4 2 2 3 3 4 4 3 4 4 2 2 2 2 2 4 2 2 4 2 2 4 4 4 2 2 2
- [741] 3 2 2 2 2 2 2 2 2 3 3 2 3 2 4 4 2 2 2 2 2 2 3 3 2 2 2 4 2 4 3 3 3 2 2 2 2
- [778] 4 2 3 2 3 2 4 2 3 2 3 2 2 3 2 4 4 4 1 4 4 2 2 2 2 4 4 2 2 2 2 4 4 4 2 2 4
- [815] 2 4 2 3 4 2 2 4 2 2 3 3 2 2 2 4 2 3 2 3 2 4 4 2 4 3 3 2 4 3 2 3 4 3 3 2 4
- [852] 2 4 4 2 3 3 2 2 3 4 2 3 4 4 4 2 3 2 3 4 2 3 4 4 4 2 2 2 4 2 2 4 2 4 2 2 4
- [889] 3 4 3 2 2 4 4 4 4 2 4 3 2 2 4 4 4 3 2 2 2 4 2 3 4 3 4 2 4 4 2 2 4 3 2 3 2
- [926] 2 4 2 2 4 2 2 2 4 2 3 2 2 4 4 2 4 2 2 3 4 3 4 4 3 2 2 2 2 2 2 2 4 4 4 2 3
- [963] 4 2 4 2 3 2 4 2 2 2 3 4 2 3 2 3 4 3 2 4 2 3 4 3 3 2 4 3 3 2 3 2 4 2 1 4 4
-[1000] 3 4 3 4 4 3 3 3 2 4 3 3 3 3 4 3 4 4 2 2 3 4 2 4 4 2 3 2 2 2 3 4 3 4 2 4 2
-[1037] 3 3 4 2 3 4 3 4 4 2 2 2 4 2 3 2 2 2 2 2 2 2 2 4 4 3 4 4 3 4 2 2 4 1 2 3 2
-[1074] 2 3 2 2 4 3 2 3 2 3 4 2 2 2 4 4 3 4 2 2 2 3 4 4 2 4 3 4 3 4 3 2 2 2 4 2 2
-[1111] 2 2 2 2 3 4 3 4 2 3 4 4 2 2 2 2 2 4 3 2 4 4 2 4 2 4 2 4 3 4 3 2 2 4 4 3 4
-[1148] 2 2 3 4 3 2 4 2 2 2 4 2 4 3 2 2 4 4 2 4 3 4 2 3 2 3 3 3 4 4 4 2 4 4 3 2 4
-[1185] 3 2 2 4 4 4 4 4 4 3 4 2 2 4 3 2 2 3 4 2 4 2 4 4 2 2 2 2 3 4 4 2 2 4 2 3 2
-[1222] 4 2 2 2 3 3 4 2 2 2 2 2 3 3 4 4 4 4 2 2 2 4 2 3 3 2 4 2 3 4 2 3 4 3 2 2 2
-[1259] 4 4 4 2 2 2 3 2 2 4 3 4 3 4 4 2 4 4 4 2 4 3 3 4 2 4 2 4 3 2 2 2 4 2 4 2 4
-[1296] 4 3 2 2 4 2 4 2 2 3 4 4 2 2 2 4 4 2 4 3 2 4 2 2 2 2 4 3 4 2 2 4 3 3 2 2 3
-[1333] 3 1 4 2 2 3 3 2 2 3 4 2 4 4 2 3 4 4 2 4 2 3 2 2 2 2 2 3 2 4 3 4 4 4 3 4 2
-[1370] 2 4 2 4 2 2 4 4 4 3 2 2 2 4 2 2 2 3 2 2 4 2 4 3 3 4 2 3 3 4 3 2 3 3 2 2 3
-[1407] 2 2 4 2 2 3 4 2 3 3 4 4 2 2 3 2 2 2 2 4 3 4 2 2 2 4 4 2 1 2 4 2 3 2 2 2 4
-[1444] 3 4 4 2 2 3 2 2 3 3 2 4 4 2 2 4 2 3 3 3 2 4 4 4 2 3 4 3 4 3 3 4 3 2 4 2 2
-[1481] 4 2 2 3 3 3 3 3 4 4 2 2 4 3 2 2 2 2 3 2 4 4 2 2 2 4 4 2 2 2 4 3 2 3 4 2 4
-[1518] 2 4 2 2 2 3 2 2 4 4 3 2 4 4 3 3 3 2 2 3 2 4 4 4 4 3 2 4 3 2 3 2 4 2 4 4 3
-[1555] 2 4 4 4 4 2 2 3 2 3 4 3 2 3 2 4 4 2 3 3 2 4 4 3 3 2 4 4 3 4 2 4 2 2 4 4 4
-[1592] 3 4 2 2 4 4 4 4 4 4 2 1 2 4 2 3 2 2 2 3 2 4 4 2 4 3 4 2 2 2 3 3 2 4 4 4 2
-[1629] 4 2 4 2 2 2 2 2 4 3 2 3 3 4 4 4 4 4 3 4 3 4 3 2 4 4 4 2 2 4 3 4 3 1 2 2 4
-[1666] 3 4 3 3 2 3 4 4 3 2 2 2 2 3 3 2 2 2 2 4 4 3 2 3 1 3 2 2 4 2 2 3 4 4 2 4 4
-[1703] 4 2 2 4 2 3 3 3 2 2 2 2 4 4 4 2 2 3 4 2 4 3 2 3 4 3 2 2 4 2 4 3 2 2 4 2 2
-[1740] 4 4 4 4 2 4 4 4 2 3 3 4 4 2 2 4 2 4 2 3 4 4 4 3 2 2 2 2 2 2 2 2 2 3 4 3 4
-[1777] 4 2 4 2 3 4 2 4 2 3 4 3 4 4 2 4 4 4 4 4 3 2 4 4 2 4 3 2 4 4 2 4 3 2 3 3 4
-[1814] 4 4 3 3 4 4 2 4 4 2 4 2 3 2 2 2 3 2 3 4 2 4 2 2 2 2 2 4 4 2 4 4 2 3 2 2 3
-[1851] 4 3 2 4 4 4 2 4 2 3 2 3 3 3 3 2 2 2 3 2 4 4 2 2 2 3 2 4 4 1 2 2 4 2 2 3 2
-[1888] 2 3 4 2 4 3 2 3 2 2 2 4 4 4 2 2 2 4 2 3 4 4 4 2 3 2 3 2 4 2 4 2 2 4 2 4 4
-[1925] 4 2 3 4 3 4 3 4 4 3 2 2 2 2 2 3 2 2 4 4 3 4 4 3 4 4 2 4 2 4 4 4 4 4 3 4 2
-[1962] 4 4 4 1 3 3 2 2 2 2 3 4 3 2 2 3 4 4 3 4 4 4 1 4 3 2 2 2 4 2 3 2 2 2 2 2 2
-[1999] 3 4 3 3 2 2 3 2 3 2 2 4 4 2 2 3 4 2 3 2 2 3 2 3 4 2 2 2 2 2 2 4 3 2 4 2 2
-[2036] 4 2 2 2 2 3 4 2 4 3 2 3 2 2 3 2 2 2 3 2 2 2 2 2 4 2 2 2 2 3 4 4 3 3 4 3 2
-[2073] 3 4 3 2 3 4 3 4 2 4 2 2 2 2 2 2 2 4 2 4 2 3 2 4 4 3 2 3 3 4 4 4 2 3 2 3 3
-[2110] 3 3 3 3 4 2 3 2 3 3 3 2 2 2 2 4 2 2 2 3 2 2 2 2 4 2 2 4 3 3 4 4 3 4 2 2 3
-[2147] 2 2 2 4 2 2 2 4 4 3 3 4 4 4 2 2 2 2 3 2 4 2 2 2 2 3 4 2 4 3 1 4 4 3 4 3 2
-[2184] 3 4 2 2 4 3 4 2 2 3 2 4 4 4 2 2 2 4 2 3 3 4 3 3 2 3 4 2 2 2 3 3 2 2 2 2 2
-[2221] 2 2 4 4 2 2 2 3 2 3 2 3 3 3 2 4 2 3 4 3 2 4 4 3 3 4 4 3 2 2 3 4 3 2 2 4 4
-[2258] 3 4 3 2 2 4 4 4 3 4 4 2 3 4 4 3 2 2 3 3 3 2 2 4 4 3 3 3 4 3 4 4 3 2 2 4 4
-[2295] 4 2 2 4 2 2 2 2 4 2 2 4 2 2 2 2 2 2 2 4 2 3 4 2 2 3 3 3 4 4 2 2 4 3 4 2 2
-[2332] 4 2 2 4 4 2 3 2 2 2 2 4 3 3 2 4 4 3 2 4 2 2 4 2 3 2 3 2 4 2 4 3 2 4 4 4 4
-[2369] 2 4 2 2 3 2 4 3 4 2 4 4 3 4 3 2 4 2 4 2 4 2 2 4 4 4 4 2 3 4 3 4 4 4 2 4 2
-[2406] 2 2 2 3 4 2 2 2 2 2 4 2 4 2 2 2 3 3 2 4 3 3 4 2 2 2 3 4 4 3 2 4 3 4 2 2 2
-[2443] 3 4 3 2 2 2 4 2 2 2 4 2 2 4 2 4 4 3 4 2 3 2 2 3 2 3 2 3 4 4 2 3 4 4 4 3 3
-[2480] 2 2 2 2 3 3 2 2 3 2 3 3 2 4 2 2 4 4 4 4 4 2 4 2 2 2 3 4 2 4 2 4 3 4 2 2 2
-[2517] 4 2 2 4 3 4 3 3 4 2 4 2 2 2 3 4 2 2 2 2 2 2 2 2 2 2 2 2 4 2 3 4 2 2 2 3 2
-[2554] 2 2 3 4 2 3 2 2 4 2 2 4 3 2 4 4 2 2 2 4 2 3 4 2 4 4 3 4 4 4 2 4 2 4 2 4 4
-[2591] 2 2 4 2 3 2 4 2 4 3 3 3 4 4 4 4 3 3 3 4 3 4 3 2 4 2 4 4 2 3 4 3 4 3 3 2 4
-[2628] 3 3 3 3 2 2 2 3 4 4 2 3 2 3 3 2 2 4 2 2 4 4 2 2 4 4 4 4 4 3 2 3 2 2 3 2 2
-[2665] 2 2 2 2 2 4 4 4 2 4 2 2 4 2 2 2 4 3 2 4 4 3 4 2 1 4 4 4 4 4 2 4 3 4 4 2 4
-[2702] 4 1 3 4 2 3 2 3 4 2 2 4 4 2 3 2 3 2 2 2 3 2 2 4 2 3 3 2 2 2 3 3 4 3 2 4 2
-[2739] 2 3 4 4 4 4 4 4 3 3 2 4 2 2 4 2 3 4 2 2 3 2 4 3 3 4 3 3 4 2 2 4 2 3 3 2 2
-[2776] 2 2 2 2 3 4 4 2 2 3 2 3 2 3 2 3 4 2 3 2 2 4 3 2 2 3 3 4 4 2 2 4 4 4 2 4 2
-[2813] 4 4 2 2 2 2 4 4 2 2 4 4 4 2 3 2 2 2 3 4 2 4 4 2 2 2 2 2 2 4 3 4 3 3 2 4 3
-[2850] 2 4 3 3 2 3 4 4 4 2 4 2 4 2 4 3 2 3 4 2 3 2 2 3 4 2 2 4 2 4 2 3 2 2 3 3 2
-[2887] 2 2 2 3 2 2 3 2 4 2 3 4 4 2 2 3 2 2 2 4 3 2 2 2 3 2 4 4 3 4 4 4 2 4 4 2 4
-[2924] 3 3 2 2 4 4 4 2 2 4 3 4 3 4 2 4 3 4 2 4 2 4 4 4 2 4 2 2 4 2 2 4 4 2 3 3 2
-[2961] 2 2 4 4 4 3 2 3 4 2 2 2 4 2 2 3 3 2 3 4 4 2 4 4 4 4 4 2 4 4 1 2 3 3 4 3 4
-[2998] 2 3 4 4 4 4 2 4 4 4 4 2 4 3 3 3 4 4 4 2 3 4 4 3 4 2 2 4 4 4 4 3 4 4 4 2 4
-[3035] 4 2 4 3 3 2 4 2 2 3 4 2 2 4 3 4 2 2 2 4 3 3 2 4 2 4 3 4 4 3 2 2 3 4 4 3 4
-[3072] 2 2 2 2 2 4 3 3 2 2 2 3 2 4 4 2 4 2 2 4 2 3 4 3 4 2 2 2 2 2 3 2 3 2 3 3 4
-[3109] 4 2 4 4 2 4 4 3 4 4 2 4 4 2 3 3 2 2 3 4 3 2 3 4 4 3 2 3 2 2 2 4 2 3 2 4 2
-[3146] 4 2 3 3 3 4 2 2 2 4 2 2 4 3 4 2 3 4 4 4 2 2 2 2 4 2 2 3 4 2 4 2 4 2 2 4 4
-[3183] 3 4 4 3 3 2 2 2 4 2 2 4 2 2 2 3 2 3 2 3 4 4 3 2 2 3 4 3 4 2 4 2 4 2 2 3 3
-[3220] 2 2 4 2 2 2 2 4 2 3 4 3 2 3 3 2 4 2 2 3 4 3 3 2 4 3 4 2 4 4 4 2 4 4 2 4 3
-[3257] 4 4 2 4 4 4 3 4 4 3 2 2 2 2 4 3 4 2 4 4 3 4 3 4 2 4 4 2 2 3 4 2 2 4 3 2 3
-[3294] 4 3 4 4 2 3 2 2 2 2 4 4 4 3 3 4 4 4 4 3 2 4 4 4 4 2 4 2 2 4 4 4 2 4 3 4 4
-[3331] 4 3 4 4 3 4 3 4 4 2 2 2 4 2 4 4 2 4 4 3 4 4 4 3 4 4 4 2 4 3 4 4 4 4 4 4 4
-[3368] 2 4 2 2 4 3 4 3 4 4 2 2 4 4 4 3 2 3 4 4 4 3 3 2 3 4 4 2 3 2 2 3 2 2 2 2 2
-[3405] 4 4 4 3 2 4 3 4 4 2 2 2 4 4 4 4 4 2 2 2 2 4 4 4 3 4 2 4 4 2 4 3 2 4 2 2 4
-[3442] 2 2 4 2 2 2 2 2 3 2 2 4 2 2 3 2 3 4 4 4 2 2 2 2 4 4 4 4 4 4 2 2 2 2 2 2 2
-[3479] 2 2 3 2 4 4 2 2 3 3 2 4 3 4 4 4 3 3 2 3 4 3 3 4 4 3 2 2 4 4 3 2 3 3 2 4 2
-[3516] 4 3 4 2 4 4 2 2 2 4 4 2 3 4 2 3 2 2 3 2 3 3 4 4 2 4 3 2 4 4 2 4 3 2 4 2 2
-[3553] 3 2 4 2 3 2 4 3 4 4 4 4 2 3 3 4 4 4 3 2 4 4 3 4 4 4 4 3 2 2 2 3 4 2 4 3 4
-[3590] 4 4 4 4 3 4 3 4 4 4 4 2 4 3 3 4 2 4 4 4 4 2 4 3 4 4 4 4 4 4 4 3 2 4 2 4 2
-[3627] 2 4 2 2 2 4 4 3 4 4 4 2 3 2 2 4 2 3 3 4 4 4 4 4 3 2 4 2 2 3 4 3 4 4 4 3 2
-[3664] 2 3 4 4 4 4 4 3 3 4 4 2 2 4 4 4 4 2 2 2 2 3 3 3 2 2 4 2 4 4 2 2 3 4 3 4 4
-[3701] 4 2 2 2 4 2 4 2 2 2 2 4 2 4 4 3 4 2 2 4 3 4 2 3 2 4 4 2 1 4 4 3 3 3 2 2 2
-[3738] 4 4 2 2 3 2 4 2 4 3 4 2 2 4 3 4 2 2 3 4 3 4 3 2 3 4 4 3 2 2 3 3 2 2 2 2 2
-[3775] 4 4 4 3 2 2 4 4 4 3 3 2 4 2 4 3 4 3 3 2 4 4 3 4 3 4 3 3 4 2 2 4 3 4 4 4 4
-[3812] 4 2 2 3 2 4 4 3 4 3 4 3 2 3 2 4 2 2 2 2 2 2 4 2 2 4 3 2 2 3 4 4 2 2 2 2 4
-[3849] 3 2 3 4 2 2 2 2 4 4 3 4 2 4 4 4 3 2 2 3 2 3 4 2 2 4 2 2 2 3 2 2 2 4 4 4 2
-[3886] 2 2 4 2 3 2 2 4 4 2 4 2 3 2 4 2 4 2 2 2 3 4 4 3 2 2 3 3 2 3 2 4 3 4 2 3 3
-[3923] 3 4 2 3 3 2 3 2 2 2 2 2 2 2 2 2 2 3 2 4 2 4 4 2 2 4 2 3 4 3 4 3 2 4 2 4 4
-[3960] 2 3 2 4 4 2 2 3 4 4 2 3 4 4 4 4 4 4 2 2 3 4 4 2 3 4 4 2 4 2 2 2 2 2 4 2 4
-[3997] 4 2 2 2 2 3 4 4 4 4 4 4 2 2 1 3 4 2 4 3 3 4 3 3 2 2 2 3 3 4 3 2 4 2 2 4 4
-[4034] 4 3 2 3 3 2 3 3 3 4 4 4 2 4 4 3 3 3 4 3 4 4 4 3 4 3 3 4 4 4 3 3 2 3 4 2 4
-[4071] 2 2 4 3 2 3 4 4 4 2 4 2 2 4 2 2 4 2 2 4 3 4 2 1 4 2 4 3 3 4 2 4 4 4 4 4 4
-[4108] 3 3 3 3 3 2 4 2 3 4 3 4 3 4 2 4 3 4 3 3 4 3 4 4 4 3 4 2 4 3 3 3 4 4 4 2 4
-[4145] 4 4 2 3 4 4 3 4 4 4 4 4 4 4 4 4 4 4 3 3 2 2 3 4 4 4 3 2 4 2 2 3 2 3 3 2 3
-[4182] 4 4 3 2 2 4 2 4 3 3 2 4 2 2 2 3 2 2 4 4 1 2 4 3 3 2 4 4 3 3 4 2 2 3 3 3 2
-[4219] 2 4 4 4 3 2 3 4 4 3 2 2 2 4 2 4 4 4 4 2 4 4 2 4 3 2 2 2 3 2 3 4 2 4 2 2 4
-[4256] 3 4 2 2 2 2 3 4 3 2 2 3 3 2 3 2 2 2 4 3 3 2 4 4 2 4 3 3 2 2 2 3 4 3 4 2 2
-[4293] 3 2 2 3 2 2 2 3 4 3 2 4 4 3 2 4 2 2 2 2 4 3 2 4 4 2 2 2 4 4 2 2 4 3 4 2 4
-[4330] 4 2 4 4 3 3 4 4 2
+   [1] 3 3 3 3 4 3 4 4 4 3 3 3 3 3 4 3 2 3 4 2 3 3 3 4 3 2 4 3 3 3 3 4 2 4 3 3 3
+  [38] 3 3 2 3 3 2 4 4 3 3 3 3 3 3 4 3 2 4 3 3 3 3 2 2 2 3 3 4 2 3 3 2 3 3 3 3 3
+  [75] 3 3 3 4 2 3 2 3 4 3 3 2 3 2 3 3 3 3 3 3 3 3 3 2 3 4 3 3 3 3 3 3 3 3 3 3 3
+ [112] 3 3 3 4 3 3 2 4 2 3 2 3 4 3 2 4 3 2 4 3 2 3 4 4 3 3 3 3 3 3 2 2 3 3 2 3 3
+ [149] 2 3 3 3 3 3 3 3 3 3 3 3 4 2 3 4 2 3 3 3 2 4 3 4 3 4 4 3 3 2 2 3 4 4 2 2 3
+ [186] 3 4 2 4 3 2 4 2 2 2 3 3 4 2 2 3 3 3 3 2 2 4 2 3 2 3 3 3 3 3 3 4 3 3 3 2 3
+ [223] 3 3 4 4 3 3 3 3 2 3 3 3 3 3 3 4 3 2 3 3 3 3 3 3 4 2 3 4 4 3 2 3 3 3 2 2 3
+ [260] 3 4 3 3 3 3 4 3 3 2 3 2 2 3 3 3 3 3 4 3 3 4 2 2 3 2 3 3 3 2 2 3 3 4 3 3 3
+ [297] 3 3 3 3 3 3 2 3 3 3 2 2 2 4 3 3 2 3 3 4 4 4 4 4 4 3 3 2 3 3 1 3 2 3 3 4 4
+ [334] 2 3 3 3 3 2 4 3 4 3 3 2 2 3 3 3 3 2 4 2 2 4 4 4 4 3 3 4 3 4 2 4 4 2 2 3 2
+ [371] 4 4 2 4 3 3 3 2 2 2 4 3 4 2 3 4 3 4 3 3 3 2 3 2 2 4 3 3 2 4 3 3 4 3 4 3 2
+ [408] 3 4 3 4 2 4 4 2 3 2 4 2 4 3 2 3 3 3 4 3 4 2 2 4 3 4 2 3 4 3 3 3 3 2 3 3 2
+ [445] 2 3 4 2 2 3 3 4 2 3 2 3 2 3 2 3 3 2 3 4 2 3 3 3 2 3 3 3 4 3 2 2 3 2 4 2 2
+ [482] 1 4 4 2 3 2 4 2 3 2 4 3 2 2 2 3 2 3 4 2 3 4 2 3 4 2 4 4 2 3 3 3 2 2 3 3 3
+ [519] 2 3 3 3 3 3 4 3 3 3 3 3 4 4 3 3 3 3 3 3 4 3 2 4 4 2 4 2 4 2 2 2 2 4 4 3 2
+ [556] 3 2 2 3 3 2 4 1 3 3 2 4 2 2 3 3 2 4 3 2 2 2 3 4 3 2 3 3 3 2 2 4 4 3 3 2 2
+ [593] 2 3 4 4 3 3 3 3 2 3 2 3 3 4 2 2 2 3 3 4 3 2 3 3 3 2 4 3 3 4 2 3 3 2 2 2 3
+ [630] 3 2 3 2 3 2 4 3 4 2 2 3 2 2 3 3 3 2 2 2 2 3 3 3 2 3 4 2 2 2 4 4 3 3 4 4 3
+ [667] 4 2 2 3 3 3 2 4 2 2 4 2 3 3 2 2 2 3 2 2 2 3 4 4 3 3 3 3 3 3 4 2 2 2 3 2 3
+ [704] 2 2 3 2 4 3 4 2 4 4 2 3 3 4 4 2 2 4 2 2 3 3 3 3 3 2 3 3 2 3 3 2 2 2 3 3 3
+ [741] 4 3 3 3 3 3 3 3 3 4 4 3 4 3 2 2 3 3 3 3 3 3 4 4 3 3 3 2 3 2 4 4 4 3 3 3 3
+ [778] 2 3 4 3 4 3 2 3 4 3 4 3 3 4 3 2 2 2 1 2 2 3 3 3 3 2 2 3 3 3 3 2 2 2 3 3 2
+ [815] 3 2 3 4 2 3 3 2 3 3 4 4 3 3 3 2 3 4 3 4 3 2 2 3 2 4 4 3 2 4 3 4 2 4 4 3 2
+ [852] 3 2 2 3 4 4 3 3 4 2 3 4 2 2 2 3 4 3 4 2 3 4 2 2 2 3 3 3 2 3 3 2 3 2 3 3 2
+ [889] 4 2 4 3 3 2 2 2 2 3 2 4 3 3 2 2 2 4 3 3 3 2 3 4 2 4 2 3 2 2 3 3 2 4 3 4 3
+ [926] 3 2 3 3 2 3 3 3 2 3 4 3 3 2 2 3 2 3 3 4 2 4 2 2 4 3 3 3 3 3 3 3 2 2 2 3 4
+ [963] 2 3 2 3 4 3 2 3 3 3 4 2 3 4 3 4 2 4 3 2 3 4 2 4 4 3 2 4 4 3 4 3 2 3 1 2 2
+[1000] 4 2 4 2 2 4 4 4 3 2 4 4 4 4 2 4 2 2 3 3 4 2 3 2 2 3 4 3 3 3 4 2 4 2 3 2 3
+[1037] 4 4 2 3 4 2 4 2 2 3 3 3 2 3 4 3 3 3 3 3 3 3 3 2 2 4 2 2 4 2 3 3 2 1 3 4 3
+[1074] 3 4 3 3 2 4 3 4 3 4 2 3 3 3 2 2 4 2 3 3 3 4 2 2 3 2 4 2 4 2 4 3 3 3 2 3 3
+[1111] 3 3 3 3 4 2 4 2 3 4 2 2 3 3 3 3 3 2 4 3 2 2 3 2 3 2 3 2 4 2 4 3 3 2 2 4 2
+[1148] 3 3 4 2 4 3 2 3 3 3 2 3 2 4 3 3 2 2 3 2 4 2 3 4 3 4 4 4 2 2 2 3 2 2 4 3 2
+[1185] 4 3 3 2 2 2 2 2 2 4 2 3 3 2 4 3 3 4 2 3 2 3 2 2 3 3 3 3 4 2 2 3 3 2 3 4 3
+[1222] 2 3 3 3 4 4 2 3 3 3 3 3 4 4 2 2 2 2 3 3 3 2 3 4 4 3 2 3 4 2 3 4 2 4 3 3 3
+[1259] 2 2 2 3 3 3 4 3 3 2 4 2 4 2 2 3 2 2 2 3 2 4 4 2 3 2 3 2 4 3 3 3 2 3 2 3 2
+[1296] 2 4 3 3 2 3 2 3 3 4 2 2 3 3 3 2 2 3 2 4 3 2 3 3 3 3 2 4 2 3 3 2 4 4 3 3 4
+[1333] 4 1 2 3 3 4 4 3 3 4 2 3 2 2 3 4 2 2 3 2 3 4 3 3 3 3 3 4 3 2 4 2 2 2 4 2 3
+[1370] 3 2 3 2 3 3 2 2 2 4 3 3 3 2 3 3 3 4 3 3 2 3 2 4 4 2 3 4 4 2 4 3 4 4 3 3 4
+[1407] 3 3 2 3 3 4 2 3 4 4 2 2 3 3 4 3 3 3 3 2 4 2 3 3 3 2 2 3 1 3 2 3 4 3 3 3 2
+[1444] 4 2 2 3 3 4 3 3 4 4 3 2 2 3 3 2 3 4 4 4 3 2 2 2 3 4 2 4 2 4 4 2 4 3 2 3 3
+[1481] 2 3 3 4 4 4 4 4 2 2 3 3 2 4 3 3 3 3 4 3 2 2 3 3 3 2 2 3 3 3 2 4 3 4 2 3 2
+[1518] 3 2 3 3 3 4 3 3 2 2 4 3 2 2 4 4 4 3 3 4 3 2 2 2 2 4 3 2 4 3 4 3 2 3 2 2 4
+[1555] 3 2 2 2 2 3 3 4 3 4 2 4 3 4 3 2 2 3 4 4 3 2 2 4 4 3 2 2 4 2 3 2 3 3 2 2 2
+[1592] 4 2 3 3 2 2 2 2 2 2 3 1 3 2 3 4 3 3 3 4 3 2 2 3 2 4 2 3 3 3 4 4 3 2 2 2 3
+[1629] 2 3 2 3 3 3 3 3 2 4 3 4 4 2 2 2 2 2 4 2 4 2 4 3 2 2 2 3 3 2 4 2 4 1 3 3 2
+[1666] 4 2 4 4 3 4 2 2 4 3 3 3 3 4 4 3 3 3 3 2 2 4 3 4 1 4 3 3 2 3 3 4 2 2 3 2 2
+[1703] 2 3 3 2 3 4 4 4 3 3 3 3 2 2 2 3 3 4 2 3 2 4 3 4 2 4 3 3 2 3 2 4 3 3 2 3 3
+[1740] 2 2 2 2 3 2 2 2 3 4 4 2 2 3 3 2 3 2 3 4 2 2 2 4 3 3 3 3 3 3 3 3 3 4 2 4 2
+[1777] 2 3 2 3 4 2 3 2 3 4 2 4 2 2 3 2 2 2 2 2 4 3 2 2 3 2 4 3 2 2 3 2 4 3 4 4 2
+[1814] 2 2 4 4 2 2 3 2 2 3 2 3 4 3 3 3 4 3 4 2 3 2 3 3 3 3 3 2 2 3 2 2 3 4 3 3 4
+[1851] 2 4 3 2 2 2 3 2 3 4 3 4 4 4 4 3 3 3 4 3 2 2 3 3 3 4 3 2 2 1 3 3 2 3 3 4 3
+[1888] 3 4 2 3 2 4 3 4 3 3 3 2 2 2 3 3 3 2 3 4 2 2 2 3 4 3 4 3 2 3 2 3 3 2 3 2 2
+[1925] 2 3 4 2 4 2 4 2 2 4 3 3 3 3 3 4 3 3 2 2 4 2 2 4 2 2 3 2 3 2 2 2 2 2 4 2 3
+[1962] 2 2 2 1 4 4 3 3 3 3 4 2 4 3 3 4 2 2 4 2 2 2 1 2 4 3 3 3 2 3 4 3 3 3 3 3 3
+[1999] 4 2 4 4 3 3 4 3 4 3 3 2 2 3 3 4 2 3 4 3 3 4 3 4 2 3 3 3 3 3 3 2 4 3 2 3 3
+[2036] 2 3 3 3 3 4 2 3 2 4 3 4 3 3 4 3 3 3 4 3 3 3 3 3 2 3 3 3 3 4 2 2 4 4 2 4 3
+[2073] 4 2 4 3 4 2 4 2 3 2 3 3 3 3 3 3 3 2 3 2 3 4 3 2 2 4 3 4 4 2 2 2 3 4 3 4 4
+[2110] 4 4 4 4 2 3 4 3 4 4 4 3 3 3 3 2 3 3 3 4 3 3 3 3 2 3 3 2 4 4 2 2 4 2 3 3 4
+[2147] 3 3 3 2 3 3 3 2 2 4 4 2 2 2 3 3 3 3 4 3 2 3 3 3 3 4 2 3 2 4 1 2 2 4 2 4 3
+[2184] 4 2 3 3 2 4 2 3 3 4 3 2 2 2 3 3 3 2 3 4 4 2 4 4 3 4 2 3 3 3 4 4 3 3 3 3 3
+[2221] 3 3 2 2 3 3 3 4 3 4 3 4 4 4 3 2 3 4 2 4 3 2 2 4 4 2 2 4 3 3 4 2 4 3 3 2 2
+[2258] 4 2 4 3 3 2 2 2 4 2 2 3 4 2 2 4 3 3 4 4 4 3 3 2 2 4 4 4 2 4 2 2 4 3 3 2 2
+[2295] 2 3 3 2 3 3 3 3 2 3 3 2 3 3 3 3 3 3 3 2 3 4 2 3 3 4 4 4 2 2 3 3 2 4 2 3 3
+[2332] 2 3 3 2 2 3 4 3 3 3 3 2 4 4 3 2 2 4 3 2 3 3 2 3 4 3 4 3 2 3 2 4 3 2 2 2 2
+[2369] 3 2 3 3 4 3 2 4 2 3 2 2 4 2 4 3 2 3 2 3 2 3 3 2 2 2 2 3 4 2 4 2 2 2 3 2 3
+[2406] 3 3 3 4 2 3 3 3 3 3 2 3 2 3 3 3 4 4 3 2 4 4 2 3 3 3 4 2 2 4 3 2 4 2 3 3 3
+[2443] 4 2 4 3 3 3 2 3 3 3 2 3 3 2 3 2 2 4 2 3 4 3 3 4 3 4 3 4 2 2 3 4 2 2 2 4 4
+[2480] 3 3 3 3 4 4 3 3 4 3 4 4 3 2 3 3 2 2 2 2 2 3 2 3 3 3 4 2 3 2 3 2 4 2 3 3 3
+[2517] 2 3 3 2 4 2 4 4 2 3 2 3 3 3 4 2 3 3 3 3 3 3 3 3 3 3 3 3 2 3 4 2 3 3 3 4 3
+[2554] 3 3 4 2 3 4 3 3 2 3 3 2 4 3 2 2 3 3 3 2 3 4 2 3 2 2 4 2 2 2 3 2 3 2 3 2 2
+[2591] 3 3 2 3 4 3 2 3 2 4 4 4 2 2 2 2 4 4 4 2 4 2 4 3 2 3 2 2 3 4 2 4 2 4 4 3 2
+[2628] 4 4 4 4 3 3 3 4 2 2 3 4 3 4 4 3 3 2 3 3 2 2 3 3 2 2 2 2 2 4 3 4 3 3 4 3 3
+[2665] 3 3 3 3 3 2 2 2 3 2 3 3 2 3 3 3 2 4 3 2 2 4 2 3 1 2 2 2 2 2 3 2 4 2 2 3 2
+[2702] 2 1 4 2 3 4 3 4 2 3 3 2 2 3 4 3 4 3 3 3 4 3 3 2 3 4 4 3 3 3 4 4 2 4 3 2 3
+[2739] 3 4 2 2 2 2 2 2 4 4 3 2 3 3 2 3 4 2 3 3 4 3 2 4 4 2 4 4 2 3 3 2 3 4 4 3 3
+[2776] 3 3 3 3 4 2 2 3 3 4 3 4 3 4 3 4 2 3 4 3 3 2 4 3 3 4 4 2 2 3 3 2 2 2 3 2 3
+[2813] 2 2 3 3 3 3 2 2 3 3 2 2 2 3 4 3 3 3 4 2 3 2 2 3 3 3 3 3 3 2 4 2 4 4 3 2 4
+[2850] 3 2 4 4 3 4 2 2 2 3 2 3 2 3 2 4 3 4 2 3 4 3 3 4 2 3 3 2 3 2 3 4 3 3 4 4 3
+[2887] 3 3 3 4 3 3 4 3 2 3 4 2 2 3 3 4 3 3 3 2 4 3 3 3 4 3 2 2 4 2 2 2 3 2 2 3 2
+[2924] 4 4 3 3 2 2 2 3 3 2 4 2 4 2 3 2 4 2 3 2 3 2 2 2 3 2 3 3 2 3 3 2 2 3 4 4 3
+[2961] 3 3 2 2 2 4 3 4 2 3 3 3 2 3 3 4 4 3 4 2 2 3 2 2 2 2 2 3 2 2 1 3 4 4 2 4 2
+[2998] 3 4 2 2 2 2 3 2 2 2 2 3 2 4 4 4 2 2 2 3 4 2 2 4 2 3 3 2 2 2 2 4 2 2 2 3 2
+[3035] 2 3 2 4 4 3 2 3 3 4 2 3 3 2 4 2 3 3 3 2 4 4 3 2 3 2 4 2 2 4 3 3 4 2 2 4 2
+[3072] 3 3 3 3 3 2 4 4 3 3 3 4 3 2 2 3 2 3 3 2 3 4 2 4 2 3 3 3 3 3 4 3 4 3 4 4 2
+[3109] 2 3 2 2 3 2 2 4 2 2 3 2 2 3 4 4 3 3 4 2 4 3 4 2 2 4 3 4 3 3 3 2 3 4 3 2 3
+[3146] 2 3 4 4 4 2 3 3 3 2 3 3 2 4 2 3 4 2 2 2 3 3 3 3 2 3 3 4 2 3 2 3 2 3 3 2 2
+[3183] 4 2 2 4 4 3 3 3 2 3 3 2 3 3 3 4 3 4 3 4 2 2 4 3 3 4 2 4 2 3 2 3 2 3 3 4 4
+[3220] 3 3 2 3 3 3 3 2 3 4 2 4 3 4 4 3 2 3 3 4 2 4 4 3 2 4 2 3 2 2 2 3 2 2 3 2 4
+[3257] 2 2 3 2 2 2 4 2 2 4 3 3 3 3 2 4 2 3 2 2 4 2 4 2 3 2 2 3 3 4 2 3 3 2 4 3 4
+[3294] 2 4 2 2 3 4 3 3 3 3 2 2 2 4 4 2 2 2 2 4 3 2 2 2 2 3 2 3 3 2 2 2 3 2 4 2 2
+[3331] 2 4 2 2 4 2 4 2 2 3 3 3 2 3 2 2 3 2 2 4 2 2 2 4 2 2 2 3 2 4 2 2 2 2 2 2 2
+[3368] 3 2 3 3 2 4 2 4 2 2 3 3 2 2 2 4 3 4 2 2 2 4 4 3 4 2 2 3 4 3 3 4 3 3 3 3 3
+[3405] 2 2 2 4 3 2 4 2 2 3 3 3 2 2 2 2 2 3 3 3 3 2 2 2 4 2 3 2 2 3 2 4 3 2 3 3 2
+[3442] 3 3 2 3 3 3 3 3 4 3 3 2 3 3 4 3 4 2 2 2 3 3 3 3 2 2 2 2 2 2 3 3 3 3 3 3 3
+[3479] 3 3 4 3 2 2 3 3 4 4 3 2 4 2 2 2 4 4 3 4 2 4 4 2 2 4 3 3 2 2 4 3 4 4 3 2 3
+[3516] 2 4 2 3 2 2 3 3 3 2 2 3 4 2 3 4 3 3 4 3 4 4 2 2 3 2 4 3 2 2 3 2 4 3 2 3 3
+[3553] 4 3 2 3 4 3 2 4 2 2 2 2 3 4 4 2 2 2 4 3 2 2 4 2 2 2 2 4 3 3 3 4 2 3 2 4 2
+[3590] 2 2 2 2 4 2 4 2 2 2 2 3 2 4 4 2 3 2 2 2 2 3 2 4 2 2 2 2 2 2 2 4 3 2 3 2 3
+[3627] 3 2 3 3 3 2 2 4 2 2 2 3 4 3 3 2 3 4 4 2 2 2 2 2 4 3 2 3 3 4 2 4 2 2 2 4 3
+[3664] 3 4 2 2 2 2 2 4 4 2 2 3 3 2 2 2 2 3 3 3 3 4 4 4 3 3 2 3 2 2 3 3 4 2 4 2 2
+[3701] 2 3 3 3 2 3 2 3 3 3 3 2 3 2 2 4 2 3 3 2 4 2 3 4 3 2 2 3 1 2 2 4 4 4 3 3 3
+[3738] 2 2 3 3 4 3 2 3 2 4 2 3 3 2 4 2 3 3 4 2 4 2 4 3 4 2 2 4 3 3 4 4 3 3 3 3 3
+[3775] 2 2 2 4 3 3 2 2 2 4 4 3 2 3 2 4 2 4 4 3 2 2 4 2 4 2 4 4 2 3 3 2 4 2 2 2 2
+[3812] 2 3 3 4 3 2 2 4 2 4 2 4 3 4 3 2 3 3 3 3 3 3 2 3 3 2 4 3 3 4 2 2 3 3 3 3 2
+[3849] 4 3 4 2 3 3 3 3 2 2 4 2 3 2 2 2 4 3 3 4 3 4 2 3 3 2 3 3 3 4 3 3 3 2 2 2 3
+[3886] 3 3 2 3 4 3 3 2 2 3 2 3 4 3 2 3 2 3 3 3 4 2 2 4 3 3 4 4 3 4 3 2 4 2 3 4 4
+[3923] 4 2 3 4 4 3 4 3 3 3 3 3 3 3 3 3 3 4 3 2 3 2 2 3 3 2 3 4 2 4 2 4 3 2 3 2 2
+[3960] 3 4 3 2 2 3 3 4 2 2 3 4 2 2 2 2 2 2 3 3 4 2 2 3 4 2 2 3 2 3 3 3 3 3 2 3 2
+[3997] 2 3 3 3 3 4 2 2 2 2 2 2 3 3 1 4 2 3 2 4 4 2 4 4 3 3 3 4 4 2 4 3 2 3 3 2 2
+[4034] 2 4 3 4 4 3 4 4 4 2 2 2 3 2 2 4 4 4 2 4 2 2 2 4 2 4 4 2 2 2 4 4 3 4 2 3 2
+[4071] 3 3 2 4 3 4 2 2 2 3 2 3 3 2 3 3 2 3 3 2 4 2 3 1 2 3 2 4 4 2 3 2 2 2 2 2 2
+[4108] 4 4 4 4 4 3 2 3 4 2 4 2 4 2 3 2 4 2 4 4 2 4 2 2 2 4 2 3 2 4 4 4 2 2 2 3 2
+[4145] 2 2 3 4 2 2 4 2 2 2 2 2 2 2 2 2 2 2 4 4 3 3 4 2 2 2 4 3 2 3 3 4 3 4 4 3 4
+[4182] 2 2 4 3 3 2 3 2 4 4 3 2 3 3 3 4 3 3 2 2 1 3 2 4 4 3 2 2 4 4 2 3 3 4 4 4 3
+[4219] 3 2 2 2 4 3 4 2 2 4 3 3 3 2 3 2 2 2 2 3 2 2 3 2 4 3 3 3 4 3 4 2 3 2 3 3 2
+[4256] 4 2 3 3 3 3 4 2 4 3 3 4 4 3 4 3 3 3 2 4 4 3 2 2 3 2 4 4 3 3 3 4 2 4 2 3 3
+[4293] 4 3 3 4 3 3 3 4 2 4 3 2 2 4 3 2 3 3 3 3 2 4 3 2 2 3 3 3 2 2 3 3 2 4 2 3 2
+[4330] 2 3 2 2 4 4 2 2 3
 
 Within cluster sum of squares by cluster:
-[1]  803.7674 2239.1390 1288.0246 1227.1171
+[1]  803.7674 1227.1171 2239.1390 1288.0246
  (between_SS / total_SS =  57.3 %)
 
 Available components:
@@ -1207,7 +1292,166 @@ Available components:
 \end{Soutput}
 \end{Schunk}
 
-group 1: Champions\\
+\begin{Schunk}
+\begin{Sinput}
+group <- k2$cluster
+cd_RFM3 <- cbind(cd_RFM, group)
+#write.csv(cd_RFM3, "../shiny/www/mydata1.csv")
+\end{Sinput}
+\end{Schunk}
+
+\hypertarget{hierarchical-clustering-approache}{%
+\subsection{Hierarchical clustering
+approache}\label{hierarchical-clustering-approache}}
+
+\begin{Schunk}
+\begin{Sinput}
+set.seed(123)
+d <- dist(cd_RFM2)
+c <- hclust(d, method = 'ward.D2')
+
+plot(c)
+\end{Sinput}
+
+
+\begin{center}\includegraphics{main_files/figure-latex/unnamed-chunk-26-1} \end{center}
+
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+members <- cutree(c,k = 4)
+
+table(members)
+members
+\end{Sinput}
+\begin{Soutput}
+members
+   1    2    3    4 
+2452  772 1092   22 
+   [1] 1 1 1 1 2 1 2 2 2 1 1 1 1 1 2 1 1 1 2 3 1 1 1 2 1 3 2 1 1 1 1 1 1 2 1 1 1
+  [38] 1 1 1 1 1 1 2 2 1 1 1 1 1 1 2 1 1 2 1 1 1 1 3 1 3 1 1 1 1 1 1 3 1 1 1 1 1
+  [75] 1 1 1 2 3 1 3 1 2 1 1 2 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [112] 1 1 1 2 1 1 3 1 3 1 3 1 2 1 1 2 1 3 2 1 3 1 2 2 1 1 1 1 1 1 3 1 1 1 3 1 1
+ [149] 3 1 1 1 1 1 1 1 1 1 1 1 2 2 1 2 3 1 1 1 1 2 1 2 1 2 2 1 1 1 1 1 2 2 1 3 1
+ [186] 1 2 3 1 1 1 2 3 3 3 1 1 2 3 3 1 1 1 1 3 1 2 3 1 3 1 1 1 1 1 1 2 1 1 1 3 1
+ [223] 1 1 2 2 1 2 1 1 1 1 1 1 1 1 1 2 1 3 1 1 1 1 1 1 1 3 1 2 2 1 3 1 1 1 3 1 1
+ [260] 1 2 1 1 1 1 2 1 1 3 1 1 3 1 1 1 1 1 2 1 1 1 3 3 1 3 1 1 1 3 1 1 1 2 1 1 1
+ [297] 1 1 1 1 1 1 1 1 1 1 1 3 1 2 1 1 1 1 1 1 2 2 2 2 2 1 1 1 1 1 4 1 1 1 1 2 2
+ [334] 3 1 1 1 1 1 2 1 2 2 1 1 3 1 1 1 1 1 2 3 3 1 2 2 2 1 1 2 1 1 3 1 2 3 3 1 1
+ [371] 2 2 3 2 1 1 1 3 3 3 2 1 2 3 1 2 1 2 1 1 1 1 1 1 3 2 1 1 3 2 1 1 2 1 1 1 3
+ [408] 1 2 1 1 3 2 2 3 1 1 2 3 2 1 3 1 1 1 2 1 2 3 3 2 1 2 1 1 1 1 1 1 1 3 1 1 3
+ [445] 3 1 1 3 1 1 1 2 3 1 3 1 1 1 3 1 1 3 1 2 1 1 1 1 3 1 1 1 2 1 3 3 1 3 2 3 3
+ [482] 4 2 1 3 1 3 2 3 1 1 2 1 3 1 3 1 3 1 2 3 1 2 3 1 1 3 2 2 3 1 1 1 1 3 1 1 1
+ [519] 3 1 1 1 1 1 2 1 1 1 1 1 2 2 1 1 1 1 1 1 1 1 3 2 2 1 1 1 2 1 3 3 1 1 2 1 3
+ [556] 1 3 2 1 1 3 1 4 1 1 3 2 1 3 1 1 3 2 1 3 3 2 1 2 1 3 1 1 1 3 3 3 2 1 1 3 1
+ [593] 3 1 2 2 1 1 1 1 3 1 3 1 1 2 3 3 3 1 1 2 1 1 1 1 1 3 2 1 1 2 3 1 1 3 3 3 1
+ [630] 1 1 1 3 1 3 2 1 2 3 3 1 3 3 1 1 1 3 3 3 3 1 1 1 1 1 2 3 3 1 2 2 1 1 2 1 1
+ [667] 2 1 3 1 2 1 3 2 3 3 1 3 1 1 3 3 1 1 3 3 1 1 2 2 1 1 1 1 1 1 2 3 3 3 1 3 1
+ [704] 3 1 1 3 2 1 1 1 1 2 2 1 1 2 1 3 2 2 1 3 1 1 1 1 1 1 1 1 3 1 1 1 3 3 1 1 1
+ [741] 2 1 1 1 1 1 1 1 1 2 1 1 2 1 1 1 1 1 1 1 1 1 2 2 1 1 1 3 1 3 2 2 2 1 1 1 1
+ [778] 3 1 2 1 2 1 1 1 2 1 1 1 1 1 1 3 3 3 4 3 3 1 1 1 1 3 2 1 1 1 1 3 3 1 1 1 1
+ [815] 1 3 1 2 1 1 1 1 1 1 2 1 1 1 1 3 1 2 1 1 1 1 3 1 3 1 1 1 1 2 1 2 3 2 2 1 3
+ [852] 1 3 3 1 2 2 1 1 2 3 1 2 3 3 1 1 2 1 2 3 1 2 3 3 1 1 1 1 3 1 1 3 1 3 1 1 3
+ [889] 1 3 2 1 1 3 1 3 3 1 3 2 1 1 1 3 3 2 1 1 1 3 1 1 3 1 1 2 3 3 1 1 3 2 1 2 1
+ [926] 1 3 1 1 3 1 1 1 3 1 2 1 1 3 3 1 3 1 1 2 3 1 3 3 2 1 1 1 1 1 1 1 3 1 3 1 1
+ [963] 3 1 3 1 2 1 3 1 1 1 1 3 1 1 1 1 3 1 1 3 1 2 3 1 1 1 3 2 2 1 2 1 3 1 4 1 3
+[1000] 1 1 2 1 3 2 2 2 1 3 2 2 2 2 1 2 3 3 1 1 2 1 1 3 3 1 1 1 1 1 1 3 2 1 1 3 1
+[1037] 1 2 3 1 2 3 2 2 1 1 1 1 3 1 1 1 1 1 1 1 1 1 1 3 3 2 3 1 2 3 1 1 3 4 1 2 1
+[1074] 1 2 1 1 3 2 1 2 1 1 3 1 1 1 1 3 2 3 1 1 1 1 3 3 1 3 1 3 2 3 2 1 1 1 1 1 1
+[1111] 1 1 1 1 2 3 2 1 1 2 3 3 1 1 1 1 1 3 2 1 3 3 1 1 1 1 1 3 1 1 1 1 1 1 3 2 3
+[1148] 1 1 2 3 1 1 3 1 1 1 3 1 3 2 1 1 3 3 1 3 1 3 1 2 1 2 1 2 3 3 3 1 3 3 2 1 3
+[1185] 1 2 1 3 2 3 3 3 3 2 2 1 1 3 2 1 1 1 3 1 3 1 1 3 1 1 1 1 1 3 3 1 1 1 1 1 1
+[1222] 1 1 1 1 1 2 3 1 1 1 1 1 1 2 1 3 3 1 1 1 1 3 1 2 2 1 3 1 2 3 1 2 1 2 1 1 1
+[1259] 3 3 3 1 1 1 2 1 1 1 2 3 2 3 3 1 3 3 3 1 3 2 2 3 1 3 1 3 2 1 1 1 3 1 3 1 1
+[1296] 2 2 1 1 3 1 3 1 1 2 1 2 1 1 1 3 3 1 3 2 1 3 1 1 1 1 3 2 3 1 1 1 2 2 1 1 2
+[1333] 2 4 3 1 1 1 2 1 1 2 3 1 3 3 1 2 3 3 1 1 1 2 1 1 1 1 1 1 1 3 2 3 3 3 2 3 1
+[1370] 1 1 1 3 1 1 1 3 3 2 1 1 1 1 1 1 1 1 1 1 3 1 1 2 2 1 1 1 2 1 1 1 2 2 1 1 2
+[1407] 1 1 3 1 1 2 1 1 2 2 3 3 1 1 2 1 1 1 1 3 2 3 1 1 1 1 3 1 4 1 3 1 2 1 1 1 1
+[1444] 2 1 3 1 1 1 1 1 2 1 1 3 1 1 1 3 1 1 2 2 1 3 3 3 1 2 3 2 2 1 2 3 2 1 3 1 1
+[1481] 3 1 1 2 2 2 1 1 3 3 1 1 3 2 1 1 1 1 2 1 1 1 1 1 1 1 3 1 1 1 3 2 1 2 1 1 1
+[1518] 1 3 1 1 1 1 1 1 3 1 2 1 3 3 2 2 2 1 1 1 1 1 3 3 3 2 1 3 2 1 2 1 3 1 1 3 2
+[1555] 1 3 3 1 3 1 1 2 1 2 1 1 1 2 1 3 3 1 2 2 1 3 3 2 2 1 1 3 2 1 1 3 1 1 3 3 1
+[1592] 2 3 1 1 3 3 3 1 3 3 1 4 1 3 1 1 1 1 1 2 1 3 1 1 3 2 1 1 1 1 1 2 1 3 2 3 1
+[1629] 3 1 1 1 1 1 1 1 3 2 1 1 2 3 3 3 3 3 1 3 2 3 2 1 3 3 3 1 1 3 2 3 2 4 1 1 3
+[1666] 2 3 2 1 1 1 3 3 1 1 1 1 1 2 2 1 1 1 1 3 3 1 1 1 4 1 1 1 3 1 1 2 3 3 1 3 3
+[1703] 3 1 1 3 1 2 2 2 1 1 1 1 3 3 3 1 1 2 3 1 3 2 1 2 1 2 1 1 1 1 3 2 1 1 3 1 1
+[1740] 1 3 3 3 1 3 3 3 1 2 2 3 3 1 1 1 1 3 1 1 3 3 1 2 1 1 1 1 1 1 1 1 1 2 3 2 1
+[1777] 3 1 3 1 2 3 1 1 1 2 3 2 3 3 1 3 3 3 3 3 2 1 3 3 1 3 1 1 3 3 1 1 2 1 1 1 1
+[1814] 3 3 2 2 1 1 1 3 3 1 3 1 2 1 1 1 1 1 2 1 1 1 1 1 1 1 1 3 3 1 1 3 1 1 1 1 2
+[1851] 3 1 1 3 1 1 1 3 1 2 1 1 2 2 1 1 1 1 1 1 3 3 1 1 1 1 1 1 3 4 1 1 3 1 1 1 1
+[1888] 1 2 3 1 1 2 1 2 1 1 1 3 3 3 1 1 1 1 1 2 2 3 3 1 2 1 2 1 3 1 3 1 1 3 1 3 1
+[1925] 3 1 2 3 2 3 1 3 3 1 1 1 1 1 1 2 1 1 3 3 1 3 3 2 1 3 1 3 1 3 1 3 1 3 2 1 1
+[1962] 1 3 3 4 1 2 1 1 1 1 2 3 2 1 1 2 3 3 2 1 3 3 4 1 1 1 1 1 1 1 2 1 1 1 1 1 1
+[1999] 1 3 2 2 1 1 2 1 1 1 1 3 1 1 1 2 3 1 1 1 1 2 1 2 1 1 1 1 1 1 1 1 2 1 3 1 1
+[2036] 3 1 1 1 1 1 3 1 3 2 1 2 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 2 3 1 2 2 3 2 1
+[2073] 2 3 3 1 2 1 1 3 1 3 1 1 1 1 1 1 1 3 1 1 1 2 1 3 3 1 1 2 2 3 1 3 1 1 1 2 2
+[2110] 2 2 2 2 1 1 1 1 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 3 1 1 2 2 1 1 1 2 3 1 1 2
+[2147] 1 1 1 1 1 1 1 3 3 2 2 1 3 1 1 1 1 1 2 1 3 1 1 1 1 2 3 1 3 2 4 1 3 1 1 2 1
+[2184] 2 1 1 1 3 2 3 1 1 2 2 2 3 1 1 1 1 3 1 2 2 3 1 2 1 2 3 1 1 1 2 2 1 1 1 1 1
+[2221] 1 1 1 3 1 1 1 1 1 1 1 1 2 1 1 3 1 2 1 2 1 1 3 1 1 1 1 2 1 1 1 1 2 1 1 3 1
+[2258] 2 3 2 1 1 3 3 3 1 3 3 1 2 3 3 2 1 1 2 2 2 1 1 3 3 2 2 2 3 2 3 3 2 1 1 3 3
+[2295] 1 1 1 3 1 1 1 1 2 1 1 3 1 1 1 1 1 1 1 1 1 2 3 1 1 1 1 2 3 2 1 1 3 1 1 1 1
+[2332] 3 1 1 1 3 1 2 1 1 1 1 1 2 2 1 3 3 2 1 3 1 1 3 1 2 1 2 1 1 1 3 2 1 3 3 1 1
+[2369] 1 3 1 1 1 1 2 2 3 1 3 3 1 1 2 1 3 1 1 1 3 1 1 3 3 3 1 1 2 1 1 3 1 3 1 3 1
+[2406] 1 1 1 1 3 1 1 1 1 1 1 1 3 1 1 1 1 1 1 2 1 2 3 1 1 1 2 3 3 1 1 3 2 3 1 1 1
+[2443] 2 3 2 1 1 1 3 1 1 1 3 1 1 3 1 3 3 2 3 1 2 1 1 1 1 2 1 2 1 1 1 2 3 3 3 1 2
+[2480] 1 1 1 1 2 2 1 1 2 1 2 2 1 3 1 1 3 3 3 1 3 1 3 1 1 1 2 3 1 3 1 3 2 1 1 1 1
+[2517] 3 1 1 1 2 1 1 2 3 1 1 1 1 1 2 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 3 1 1 1 1 1
+[2554] 1 1 2 1 1 3 1 1 1 1 1 1 2 1 1 3 1 1 1 3 1 2 3 1 3 3 2 3 1 3 1 1 1 3 1 3 3
+[2591] 1 1 3 1 2 1 3 1 1 2 2 2 3 3 3 3 1 1 2 3 2 1 2 1 3 1 3 3 1 1 3 2 3 2 2 1 2
+[2628] 1 2 2 1 1 1 1 1 3 3 1 2 1 2 2 1 1 3 1 1 3 3 1 1 3 3 3 3 3 2 1 2 1 1 1 1 1
+[2665] 1 1 1 1 1 3 3 3 1 3 1 1 3 1 1 1 3 2 1 3 1 2 1 1 4 3 3 3 3 3 1 1 2 1 1 1 3
+[2702] 3 4 2 1 1 2 1 2 3 1 1 3 3 1 2 1 2 1 1 1 2 1 1 1 1 2 2 1 1 1 2 2 1 2 1 3 1
+[2739] 1 2 3 1 2 1 3 1 2 2 1 1 1 1 3 1 2 3 1 1 1 1 2 2 2 3 1 1 3 1 1 3 1 2 2 1 1
+[2776] 1 1 1 1 2 1 3 1 1 2 1 2 1 1 1 2 3 1 2 1 1 3 2 1 1 3 2 1 1 1 1 3 1 3 1 1 1
+[2813] 3 3 1 1 1 1 3 1 1 1 1 3 3 1 2 1 1 1 2 3 1 3 3 1 1 1 1 1 1 3 1 1 2 2 1 1 2
+[2850] 1 1 2 1 1 1 1 3 3 1 3 1 1 1 3 1 1 2 3 1 2 1 1 2 2 1 1 3 1 3 1 2 1 1 2 1 1
+[2887] 1 1 1 2 1 1 2 1 1 1 2 3 3 1 1 2 1 1 1 3 2 1 1 1 2 1 3 3 1 3 3 1 1 3 3 1 3
+[2924] 1 2 1 1 3 3 2 1 1 3 2 1 2 1 1 3 2 3 1 1 1 3 3 3 1 3 1 1 1 1 1 3 1 1 2 2 1
+[2961] 1 1 1 3 3 2 1 2 1 1 1 1 3 1 1 2 2 1 2 3 1 1 3 3 3 3 3 1 3 3 4 1 2 2 1 2 1
+[2998] 1 1 1 3 3 3 1 3 3 3 3 1 1 2 1 1 1 3 1 1 2 1 1 2 3 1 1 3 3 3 3 2 2 1 3 1 3
+[3035] 3 1 3 2 1 1 3 1 1 2 3 1 1 2 2 3 1 1 1 3 2 2 1 3 1 3 2 1 3 1 1 1 1 3 1 1 3
+[3072] 1 1 1 1 1 3 1 2 1 1 1 2 1 1 3 1 3 1 1 1 1 2 3 1 3 1 1 1 1 1 2 1 2 1 2 1 3
+[3109] 3 1 3 3 1 3 3 2 3 3 1 1 1 1 2 2 1 1 1 1 2 1 2 3 3 2 1 2 1 1 1 3 1 2 1 3 1
+[3146] 3 1 2 1 2 1 1 1 1 3 1 1 3 2 3 1 2 3 1 3 1 1 1 1 3 1 1 2 3 1 3 1 3 1 1 3 3
+[3183] 2 1 3 2 2 1 1 1 3 1 1 1 1 1 1 1 1 2 1 2 3 3 2 1 1 2 1 2 1 1 1 1 3 1 1 3 1
+[3220] 1 1 3 1 1 1 1 3 1 2 3 2 1 1 2 1 1 1 1 1 1 2 2 1 3 2 3 1 3 3 1 1 3 3 1 3 2
+[3257] 1 3 1 3 1 3 2 3 3 2 1 1 1 1 3 1 3 1 3 3 1 1 2 3 1 3 3 1 1 2 3 1 1 3 1 1 2
+[3294] 1 2 3 3 1 1 1 1 1 1 3 3 1 2 2 3 3 3 3 2 1 3 1 2 3 1 1 1 1 3 3 3 1 1 2 3 3
+[3331] 3 1 3 3 2 3 2 3 3 1 1 1 1 1 3 3 1 3 1 2 3 3 1 2 3 1 3 1 1 2 3 1 3 3 1 3 1
+[3368] 1 1 1 1 1 1 1 2 3 3 1 1 3 3 1 2 1 1 3 3 3 2 2 1 1 3 3 1 2 1 1 2 1 1 1 1 1
+[3405] 3 3 3 2 1 1 2 2 1 1 1 1 3 3 3 1 3 1 1 1 1 3 3 3 2 3 1 3 3 1 1 1 1 3 1 1 3
+[3442] 1 1 3 1 1 1 1 1 1 1 1 1 1 1 2 1 2 3 1 1 1 1 1 1 3 1 3 3 3 3 1 1 1 1 1 1 1
+[3479] 1 1 2 1 1 3 1 1 3 1 1 3 2 3 3 1 2 2 1 2 3 1 1 3 1 2 1 1 3 3 2 1 2 2 1 1 1
+[3516] 3 1 3 1 3 3 1 1 1 3 3 1 2 3 1 2 1 1 2 1 1 1 3 3 1 3 2 1 3 3 1 3 2 1 3 1 1
+[3553] 1 1 3 1 2 1 3 2 1 3 1 3 1 2 2 3 3 3 1 1 3 3 2 1 3 3 1 2 1 1 1 2 1 1 3 2 3
+[3590] 3 3 3 3 1 1 2 1 3 3 3 1 3 1 1 3 1 1 3 3 3 1 1 2 1 3 3 1 3 3 3 2 1 3 1 3 1
+[3627] 1 1 1 1 1 3 1 2 1 3 3 1 2 1 1 3 1 1 2 3 3 1 3 3 2 1 3 1 1 2 3 2 3 3 3 2 1
+[3664] 1 2 3 3 3 3 3 1 2 3 1 1 1 3 3 3 1 1 1 1 1 1 2 2 1 1 3 1 1 1 1 1 2 3 1 3 1
+[3701] 3 1 1 1 3 1 3 1 1 1 1 3 1 3 3 2 3 1 1 3 2 2 1 1 1 2 1 1 4 3 1 2 2 2 1 1 1
+[3738] 3 1 1 1 1 1 3 1 1 1 3 1 1 3 2 3 1 1 2 1 2 1 2 1 2 3 1 1 1 1 2 2 1 1 1 1 1
+[3775] 3 3 3 2 1 1 3 3 3 2 2 1 1 1 1 1 3 2 2 1 3 1 2 3 2 3 2 2 1 1 1 1 2 3 1 3 3
+[3812] 3 1 1 2 1 3 3 2 1 2 3 2 1 2 1 1 1 1 1 1 1 1 3 1 1 3 2 1 1 2 3 1 1 1 1 1 3
+[3849] 1 1 2 3 1 1 1 1 3 3 1 3 1 1 1 1 2 1 1 2 1 1 3 1 1 3 1 1 1 2 1 1 1 1 3 3 1
+[3886] 1 1 3 1 2 1 1 1 1 1 3 1 2 1 3 1 3 1 1 1 2 3 3 1 1 1 2 2 1 2 1 1 1 1 1 2 2
+[3923] 2 3 1 2 1 1 2 1 1 1 1 1 1 1 1 1 1 2 1 1 1 3 3 1 1 3 1 2 3 1 1 2 1 1 1 1 3
+[3960] 1 3 1 2 1 1 1 1 3 3 1 2 3 3 2 3 3 3 1 1 2 1 3 1 2 3 1 1 3 1 1 1 1 1 3 1 3
+[3997] 3 1 1 1 1 2 3 3 3 3 3 3 1 1 4 2 3 1 3 2 1 3 2 2 1 1 1 2 2 3 2 1 3 1 1 3 3
+[4034] 1 2 1 2 1 1 1 2 2 3 3 3 1 3 3 2 2 1 3 2 3 3 1 1 3 2 2 3 3 1 2 2 1 2 3 1 3
+[4071] 1 1 1 2 1 2 3 3 3 1 3 1 1 2 1 1 2 1 1 3 2 3 1 4 3 1 1 2 3 3 1 2 1 2 1 1 1
+[4108] 2 2 2 1 2 1 1 1 2 1 2 3 1 3 1 3 1 3 1 3 3 2 1 3 3 2 3 1 1 1 2 2 2 3 3 1 3
+[4145] 3 3 1 3 3 3 2 3 3 3 3 3 3 1 3 3 1 3 2 2 1 1 2 3 3 1 1 1 1 1 1 2 1 2 1 1 2
+[4182] 1 1 2 1 1 3 1 3 2 2 1 3 1 1 1 2 1 1 3 3 4 1 3 2 2 1 1 3 2 2 3 1 1 2 2 1 1
+[4219] 1 1 3 3 2 1 2 3 1 2 1 1 1 1 1 2 3 3 3 1 3 3 1 3 2 1 1 1 1 1 1 3 1 1 1 1 3
+[4256] 2 3 1 1 1 1 1 3 2 1 1 2 2 1 1 1 1 1 3 1 2 1 1 3 1 3 2 1 1 1 1 1 1 1 3 1 1
+[4293] 2 1 1 2 1 1 1 1 3 2 1 3 3 1 1 1 1 1 1 1 3 2 1 1 3 1 1 1 3 3 1 1 3 2 3 1 3
+[4330] 3 1 3 3 2 2 3 1 1
+\end{Soutput}
+\end{Schunk}
+
+According the characteristic of every group, we can give a desription
+for every group as below. group 1: Champions\\
 Bought recently, buy often and spend the most!\\
 Reward them. Can be early adopters for new products. Will promote your
 brand.
@@ -1225,13 +1469,49 @@ group 4: Promising\\
 Recent shoppers, but haven't spent much.\\
 Create brand awareness, offer free trials
 
-\begin{Schunk}
-\begin{Sinput}
-group <- k2$cluster
-cd_RFM3 <- cbind(cd_RFM, group)
-#write.csv(cd_RFM3, "../data/mydata1.csv")
-\end{Sinput}
-\end{Schunk}
+\hypertarget{clustering-method-evaluation}{%
+\subsection{Clustering Method
+Evaluation}\label{clustering-method-evaluation}}
+
+We have applied two different clustering algorithm. Choosing between
+k-means and hierarchical clustering is not easy. We compare the two
+kinds of groups with the actual expected result, we decided to adopt
+k-means.
+
+\hypertarget{model-deployment}{%
+\section{Model Deployment}\label{model-deployment}}
+
+Fortunately we can state that the clustering methods were effective for
+the selected dataset. We do believe it might have a real live
+application. The model can segment customer successfully.
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+We selected \textbf{e-commerce} dataset hoping to discover the
+relationship between various attributes, which would segment the
+customer into different groups.
+
+We spent significant efforts parsing and cleaning the data. Then we
+separated redundant and useful features. We add new features according
+to our requirement.
+
+We also processed descriptive features applying data mining techniques.
+We counted the most frequently used terms to understand the content of
+the features. We counted the words. we successfully identified the most
+common words and phrase .
+
+When the data preprocessing was done we measured Hopkins statistics to
+evaluate cluster tendency of the data set. The result was satisfactory;
+we proceeded with the clusterization.
+
+We have applied two different clustering algorithm. Choosing between
+k-means and hierarchical clustering is not easy. We compare the two
+kinds of groups with the actual expected result, we decided to adopt
+k-means.
+
+Overall we were able to apply unsupervised learning to reach our goal,
+and also we develop one shiny app to present our product.
 
 \bibliography{RJreferences}
 
