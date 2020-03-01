@@ -37,6 +37,62 @@ choice.
 \section{Apply the Ethical ML
 framework}\label{apply-the-ethical-ml-framework}}
 
+\hypertarget{in-the-problem-definition-and-scope-step}{%
+\subsection{In the Problem definition and scope
+step}\label{in-the-problem-definition-and-scope-step}}
+
+In the problem identification, we all agree in the gropup 9 that we want
+to improve customer loyalty by finding segments that help to search for
+strategies the comerce can apply for every segment.
+
+Individuals are not impacted cause we don't have any PII in the dataset
+we are using and we will not use aggregate information from another
+sources.
+
+We can see that There could be a risk to individualize each person in
+the dataset if someone can access to another dataset that relate the
+invoice or the customer ID with the PII
+
+\hypertarget{in-the-design-step}{%
+\subsection{In the Design step}\label{in-the-design-step}}
+
+To ensure we all interpreted the outputs of the model we clarify that we
+will find some cluster of customers according to its older buying
+behavior to give a tool to help design marketing strategies.
+
+\hypertarget{in-the-data-collection-and-retention-step}{%
+\subsection{In the data collection and retention
+step}\label{in-the-data-collection-and-retention-step}}
+
+We just use data from the dataset proivided by kaggle made by UCI
+Machine Learning Repository.
+
+The analysis about minorities we can do it based in the country feature
+of the dataset to see if some are underrepresented.
+
+\hypertarget{in-data-processing-step}{%
+\subsection{In data processing step}\label{in-data-processing-step}}
+
+We can identify a risk because we have two columns that could be used to
+re-identification, customerID and InvoiceNo, and it could be masked to
+de-identify the data.
+
+\hypertarget{in-the-model-prototyping-and-qa-testing-step}{%
+\subsection{In the model prototyping and QA testing
+step}\label{in-the-model-prototyping-and-qa-testing-step}}
+
+The case we are working on, as is customer segmentation, is no so
+sensitive but the algorithms we are using for clustering could be
+interpretable.
+
+\hypertarget{in-the-deployment-monitoring-and-maintenance}{%
+\subsection{In the Deployment, Monitoring and
+Maintenance}\label{in-the-deployment-monitoring-and-maintenance}}
+
+When using the model it is good to monitor the performance of it when
+update the dataset to take into account possible fault in segmentation
+that could originate a fail in application of the marketing strategy.
+
 1 Data risk awareness
 
 We commit to develop and improve reasonable processes and infrastructure
