@@ -76,6 +76,35 @@ RFM (recency, frequency, monetary) analysis is a marketing technique used to det
 The objective of customers segment according to their purchase history, is to turn them into loyal customers by recommending products of their choice.
 
 # Apply the Ethical ML framework
+
+## In the Problem definition and scope step
+
+In the problem identification, we all agree in the gropup 9 that we want to improve customer loyalty by finding segments that help to search for strategies the comerce can apply for every segment.
+
+Individuals are not impacted cause we don't have any PII in the dataset we are using and we will not use aggregate information from another sources.
+
+
+We can see that There could be a risk to individualize each person in the dataset if someone can access to another dataset that relate the invoice or the customer ID with the PII
+
+## In the Design step
+
+To ensure we all interpreted the outputs of the model we clarify that we will find some cluster of customers according to its older buying behavior to give a tool to help design marketing strategies. 
+
+## In the data collection and retention step
+
+We just use data from the dataset proivided by kaggle made by UCI Machine Learning Repository.
+
+The analysis about minorities we can do it based in the country feature of the dataset to see if some are underrepresented.
+
+## In data processing step
+
+We can identify a risk because we have two columns that could be used to re-identification, customerID and InvoiceNo, and it could be masked to de-identify the data.
+
+## In the model prototyping and QA testing step
+
+
+
+
 1 Data risk awareness
 
 We commit to develop and improve reasonable processes and infrastructure to ensure data and model security are being taken into consideration during the development of machine learning systems.
