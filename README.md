@@ -3,7 +3,7 @@ York University. ML1000 - Machine Learning in Business Context. Assignment #2 - 
 
 ## Project Structure
 
-* Project presentation document: **Customer-segmentation**.  
+* Project presentation document: **Customer-segmentation.pdf**.  
 * **data** folder contains the project data sets and trained model file. 
 * **script** folder contains the script that generates the report.
 * **shiny** folder includes the shiny app deployment files.
