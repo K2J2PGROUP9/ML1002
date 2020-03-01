@@ -102,7 +102,10 @@ We can identify a risk because we have two columns that could be used to re-iden
 
 ## In the model prototyping and QA testing step
 
+The case we are working on, as is customer segmentation, is no so sensitive but the algorithms we are using for clustering could be interpretable.
 
+## In the Deployment, Monitoring and Maintenance
+When using the model it is good to monitor the performance of it when update the dataset to take into account possible fault in segmentation that could originate a fail in application of the marketing strategy.
 
 
 1 Data risk awareness
